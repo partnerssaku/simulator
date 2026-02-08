@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>処遇改善 賃上げ補助金シミュレーター v3</title>
+<title>処遇改善 賃上げ補助金シミュレーター v4</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700;900&display=swap');
 *{margin:0;padding:0;box-sizing:border-box}
@@ -19,79 +19,54 @@
   --radius:10px;--shadow:0 1px 3px rgba(0,0,0,.06);
   --shadow2:0 4px 12px rgba(0,0,0,.08);
 }
-body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;font-size:14px;-webkit-text-size-adjust:100%}
+body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;font-size:14px}
 .wrap{max-width:880px;margin:0 auto;padding:12px}
-
-/* Header */
 .hdr{text-align:center;padding:28px 16px 20px;background:linear-gradient(135deg,#0A6B5E 0%,#2563EB 100%);color:#fff;border-radius:0 0 16px 16px;margin-bottom:20px}
 .hdr h1{font-size:20px;font-weight:700;letter-spacing:.3px}
 .hdr .sub{font-size:11px;opacity:.75;margin-top:4px}
 .hdr .badge{display:inline-block;background:rgba(255,255,255,.18);padding:3px 12px;border-radius:20px;font-size:10px;margin-top:8px;letter-spacing:.3px}
-
-/* Steps indicator */
-.steps-bar{display:flex;gap:2px;margin-bottom:20px;background:var(--card);padding:6px;border-radius:10px;border:1px solid var(--border);overflow-x:auto;-webkit-overflow-scrolling:touch}
-.step-tab{flex:1;text-align:center;padding:8px 4px;border-radius:7px;font-size:11px;font-weight:500;color:var(--text3);cursor:pointer;transition:.2s;white-space:nowrap;border:none;background:none;font-family:inherit;min-height:44px;touch-action:manipulation}
+.steps-bar{display:flex;gap:2px;margin-bottom:20px;background:var(--card);padding:6px;border-radius:10px;border:1px solid var(--border);overflow-x:auto}
+.step-tab{flex:1;text-align:center;padding:8px 4px;border-radius:7px;font-size:11px;font-weight:500;color:var(--text3);cursor:pointer;transition:.2s;white-space:nowrap;border:none;background:none;font-family:inherit}
 .step-tab.active{background:var(--kaigo);color:#fff}
 .step-tab.done{color:var(--kaigo);font-weight:600}
 .step-tab:hover:not(.active){background:var(--bg)}
-
-/* Sections */
 .sec{display:none}.sec.active{display:block}
-
-/* Cards */
 .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:14px;box-shadow:var(--shadow)}
 .card h2{font-size:15px;font-weight:700;margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid var(--border);display:flex;align-items:center;gap:6px}
 .card h3{font-size:13px;font-weight:600;margin:10px 0 6px;color:var(--text)}
-
-/* Notices */
 .notice{padding:10px 14px;border-radius:8px;font-size:12px;line-height:1.6;margin-bottom:12px}
 .notice.warn{background:var(--warn-light);border-left:3px solid var(--warn);color:var(--warn-text)}
 .notice.info{background:var(--kaigo-light);border-left:3px solid var(--kaigo);color:#065F46}
 .notice.info-s{background:var(--shogai-light);border-left:3px solid var(--shogai);color:#1E40AF}
 .notice.danger{background:var(--danger-light);border-left:3px solid var(--danger);color:#991B1B}
 .notice.purple{background:var(--purple-light);border-left:3px solid var(--purple);color:#5B21B6}
-
-/* Forms */
 .fg{margin-bottom:12px}
 .fg label{display:block;font-size:12px;font-weight:600;color:var(--text2);margin-bottom:3px}
 .fg .help{font-size:11px;color:var(--text3);margin-top:2px;line-height:1.5}
-.fg input[type=number],.fg select{width:100%;padding:8px 12px;border:1px solid var(--border2);border-radius:8px;font-size:14px;font-family:inherit;background:#fff;transition:.15s}
+.fg input[type=number],.fg input[type=text],.fg select{width:100%;padding:8px 12px;border:1px solid var(--border2);border-radius:8px;font-size:14px;font-family:inherit;background:#fff;transition:.15s}
 .fg input:focus,.fg select:focus{outline:none;border-color:var(--kaigo);box-shadow:0 0 0 3px rgba(10,107,94,.1)}
-
-/* Radio/Check groups */
 .opt-group{display:flex;flex-direction:column;gap:6px;margin:8px 0}
 .opt-item{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;border:1px solid var(--border);border-radius:8px;cursor:pointer;transition:.15s;font-size:13px;line-height:1.5}
 .opt-item:hover{background:var(--bg)}
-.opt-item.selected{border-color:var(--kaigo);background:var(--kaigo-light)}
 .opt-item input{margin-top:3px;accent-color:var(--kaigo)}
-
-/* Service category */
 .svc-cat{margin-bottom:12px}
 .svc-cat-title{font-size:12px;font-weight:600;color:var(--text2);padding:6px 0;border-bottom:1px solid var(--border);margin-bottom:6px}
 .svc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:4px}
 .svc-item{display:flex;align-items:center;gap:6px;padding:7px 10px;border:1px solid var(--border);border-radius:6px;cursor:pointer;font-size:12px;transition:.12s}
 .svc-item:hover{background:var(--bg)}
-.svc-item.checked{border-color:var(--kaigo);background:var(--kaigo-light)}
 .svc-item input{accent-color:var(--kaigo)}
-
-/* Revenue input rows */
 .rev-row{display:grid;grid-template-columns:1fr 110px;gap:8px;align-items:end;padding:8px 0;border-bottom:1px solid var(--border)}
 .rev-row:last-child{border-bottom:none}
 .rev-row .rn{font-size:12px;font-weight:500}
 .rev-row .rr{font-size:10px;color:var(--text3)}
 .rev-row input{padding:6px 10px;border:1px solid var(--border2);border-radius:6px;font-size:13px;text-align:right;font-family:inherit;width:100%}
-
-/* Results */
 .results{background:linear-gradient(135deg,#F0FDF4 0%,#ECFDF5 100%);border:2px solid var(--success);border-radius:var(--radius);padding:18px;margin:14px 0}
 .result-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-top:10px}
 .r-card{background:#fff;border-radius:8px;padding:12px;text-align:center;box-shadow:var(--shadow)}
 .r-card .rl{font-size:10px;color:var(--text3);margin-bottom:3px}
 .r-card .rv{font-size:22px;font-weight:900;color:var(--kaigo)}
 .r-card .ru{font-size:10px;color:var(--text2)}
-.r-card .rs{font-size:10px;color:var(--text3);margin-top:3px}
 .r-card.main{border:2px solid var(--kaigo)}
-
-/* Accordion */
 .acc{border:1px solid var(--border);border-radius:8px;margin-bottom:6px;overflow:hidden}
 .acc-h{padding:10px 14px;background:var(--bg);cursor:pointer;font-size:12px;font-weight:600;display:flex;justify-content:space-between;align-items:center;user-select:none}
 .acc-h:hover{background:var(--border)}
@@ -99,67 +74,68 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 .acc-h.open .arr{transform:rotate(180deg)}
 .acc-b{padding:0 14px;max-height:0;overflow:hidden;transition:max-height .3s}
 .acc-b.open{max-height:5000px;padding:10px 14px}
-
-/* Distribution simulator */
-.dist-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-
-/* Todo */
 .todo-item{display:flex;align-items:flex-start;gap:8px;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px}
 .todo-item:last-child{border-bottom:none}
-.todo-item input[type=checkbox]{margin-top:3px;accent-color:var(--kaigo);width:16px;height:16px}
+.todo-item input[type=checkbox]{margin-top:3px;accent-color:var(--kaigo);width:16px;height:16px;flex-shrink:0}
 .todo-item.done{opacity:.5;text-decoration:line-through}
-.todo-sub{font-size:11px;color:var(--text3);padding-left:24px;margin-top:-4px;margin-bottom:4px}
 .todo-phase{font-size:12px;font-weight:700;color:var(--kaigo);padding:8px 0 4px;border-bottom:2px solid var(--kaigo)}
-
-/* FAQ */
 .faq-item{border-bottom:1px solid var(--border);padding:10px 0}
 .faq-q{font-size:13px;font-weight:600;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
 .faq-a{font-size:12px;color:var(--text2);max-height:0;overflow:hidden;transition:max-height .3s;line-height:1.7}
 .faq-a.open{max-height:500px;padding-top:6px}
-
-/* Template box */
 .tpl-box{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;font-size:12px;white-space:pre-wrap;line-height:1.8;position:relative}
 .copy-btn{position:absolute;top:8px;right:8px;padding:4px 10px;background:var(--kaigo);color:#fff;border:none;border-radius:4px;font-size:10px;cursor:pointer;font-family:inherit}
-
-/* Chart */
-.chart-wrap{background:#fff;border-radius:8px;padding:12px;margin-top:10px;overflow-x:auto}
-
-/* Buttons */
 .btn-primary{width:100%;padding:13px;background:var(--kaigo);color:#fff;border:none;border-radius:var(--radius);font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;box-shadow:var(--shadow2);transition:.15s}
 .btn-primary:hover{transform:translateY(-1px)}
 .btn-secondary{padding:8px 16px;background:#fff;border:1px solid var(--border2);border-radius:8px;font-size:12px;cursor:pointer;font-family:inherit;transition:.15s}
 .btn-secondary:hover{background:var(--bg)}
+.btn-print{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;background:#fff;border:2px solid var(--kaigo);border-radius:8px;font-size:13px;font-weight:600;color:var(--kaigo);cursor:pointer;font-family:inherit;transition:.15s;margin:12px 0}
+.btn-print:hover{background:var(--kaigo-light)}
 .btn-row{display:flex;gap:8px;margin:12px 0;flex-wrap:wrap}
-
-/* Nav buttons */
 .nav-row{display:flex;justify-content:space-between;margin-top:16px;padding-top:12px;border-top:1px solid var(--border)}
-.nav-btn{padding:10px 24px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;border:none;transition:.15s;min-height:44px;touch-action:manipulation}
+.nav-btn{padding:10px 24px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;border:none;transition:.15s}
 .nav-prev{background:var(--bg);color:var(--text2);border:1px solid var(--border2)}
 .nav-next{background:var(--kaigo);color:#fff}
 .nav-btn:hover{transform:translateY(-1px)}
-
-/* Compare table */
 .cmp{width:100%;border-collapse:collapse;font-size:11px;margin-top:8px}
 .cmp th,.cmp td{padding:7px 8px;border:1px solid var(--border);text-align:left;vertical-align:top}
 .cmp th{background:var(--bg);font-weight:600;white-space:nowrap}
-
-/* Footer */
 .footer{text-align:center;padding:20px 12px;font-size:10px;color:var(--text3);line-height:1.6}
 .footer a{color:var(--text3)}
-
+/* Office group card */
+.office-card{background:var(--card);border:2px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:14px}
+.office-card h3{font-size:14px;font-weight:700;color:var(--kaigo);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.office-card .office-svcs{font-size:11px;color:var(--text3);margin-bottom:10px}
+.office-card .office-total{font-size:13px;font-weight:700;color:var(--kaigo);padding:8px;background:var(--kaigo-light);border-radius:6px;text-align:center;margin:8px 0}
+.dist-box{background:#f8f9fa;border:1px solid var(--border);border-radius:8px;padding:14px;margin:8px 0}
+.dist-result{background:#fff;border:1px solid var(--border);border-radius:8px;padding:12px;margin-top:8px;font-size:12px}
+.dist-result table{width:100%;border-collapse:collapse}
+.dist-result td{padding:4px 8px;border-bottom:1px solid var(--border)}
+.dist-result .dr-total{font-weight:900;font-size:16px;color:var(--kaigo)}
+/* Grouping UI */
+.grp-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px}
+.grp-row select{padding:4px 8px;border:1px solid var(--border2);border-radius:6px;font-size:12px;font-family:inherit}
+/* Print */
+@media print{
+  body{background:#fff;font-size:11px}
+  .hdr,.steps-bar,.nav-row,.btn-row,.btn-primary,.btn-secondary,.btn-print,.copy-btn,.footer,.no-print{display:none!important}
+  .sec{display:none!important}
+  .print-target{display:block!important}
+  .print-target .card,.print-target .office-card{box-shadow:none;border:1px solid #ccc;break-inside:avoid}
+  .wrap{max-width:100%;padding:0}
+  .print-hdr{display:block!important;text-align:center;border-bottom:2px solid #333;padding-bottom:8px;margin-bottom:16px}
+  .print-hdr h1{font-size:16px;color:#333}
+  .print-hdr p{font-size:10px;color:#666}
+}
+.print-hdr{display:none}
 @media(max-width:600px){
   .wrap{padding:6px}
   .hdr h1{font-size:17px}
-  .card{padding:14px}
-  .result-grid{grid-template-columns:1fr}
+  .result-grid{grid-template-columns:1fr 1fr}
   .svc-grid{grid-template-columns:1fr}
-  .dist-row{grid-template-columns:1fr}
   .rev-row{grid-template-columns:1fr 90px}
-  .steps-bar{gap:6px}
-  .step-tab{flex:0 0 auto;min-width:76px;font-size:10px;padding:7px 4px}
-  .nav-row{flex-direction:column;gap:8px}
-  .nav-btn{width:100%;padding:12px 10px}
-  .fg input[type=number],.fg select,.btn-primary,.btn-secondary,.nav-btn{font-size:16px}
+  .step-tab{font-size:9px;padding:6px 2px}
+  .grp-row{flex-direction:column;align-items:flex-start;gap:4px}
 }
 </style>
 </head>
@@ -168,12 +144,11 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 <div class="hdr">
   <h1>処遇改善 賃上げ補助金シミュレーター</h1>
   <div class="sub">令和7年度補正予算「医療・介護等支援パッケージ」対応</div>
-  <div class="badge">TRINITY PARTNERS ─ クライアント配布用 v3</div>
+  <div class="badge">TRINITY PARTNERS ─ クライアント配布用 v4</div>
 </div>
 
 <div class="wrap">
 
-<!-- Steps Bar -->
 <div class="steps-bar" id="stepsBar">
   <button class="step-tab active" onclick="goStep(0)">STEP 0<br>診断</button>
   <button class="step-tab" onclick="goStep(1)">STEP 1<br>報酬入力</button>
@@ -184,102 +159,103 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
   <button class="step-tab" onclick="goStep(6)">巻末<br>FAQ</button>
 </div>
 
-<!-- ==================== STEP 0: 診断 ==================== -->
+<!-- ==================== STEP 0 ==================== -->
 <div class="sec active" id="sec0">
 <div class="card">
-  <h2>🔍 まず、あなたの事業所について教えてください</h2>
-  <p style="font-size:12px;color:var(--text2);margin-bottom:12px">3つの質問に答えるだけで、あなたに関係のある情報だけを表示します。</p>
+  <h2>📋 まずは3つの質問</h2>
+  <p style="font-size:12px;color:var(--text2);margin-bottom:12px">あなたに関係のある情報だけを表示します。</p>
 
   <div class="fg">
     <label>Q1. 運営しているサービスの分野は？</label>
-    <div class="opt-group" id="q1group">
-      <label class="opt-item" onclick="selectQ1('kaigo')"><input type="radio" name="q1" value="kaigo"> 介護保険サービスのみ</label>
-      <label class="opt-item" onclick="selectQ1('shogai')"><input type="radio" name="q1" value="shogai"> 障害福祉サービスのみ</label>
-      <label class="opt-item" onclick="selectQ1('both')"><input type="radio" name="q1" value="both"> 両方ある</label>
+    <div class="opt-group">
+      <label class="opt-item"><input type="radio" name="q1" value="kaigo" onchange="selectQ1()"> 介護保険サービスのみ</label>
+      <label class="opt-item"><input type="radio" name="q1" value="shogai" onchange="selectQ1()"> 障害福祉サービスのみ</label>
+      <label class="opt-item"><input type="radio" name="q1" value="both" onchange="selectQ1()"> 両方ある</label>
     </div>
   </div>
 
-  <!-- 介護サービス選択 -->
+  <!-- Q2: kaigo -->
   <div id="q2kaigo" style="display:none">
     <div class="fg">
-      <label>Q2. 運営している介護サービスをすべてチェックしてください</label>
+      <label>Q2. 提供している介護サービスを選択</label>
 
-      <div class="svc-cat">
-        <div class="svc-cat-title">🏠 訪問系</div>
-        <div class="svc-grid" id="cat_houmon"></div>
-      </div>
-      <div class="svc-cat">
-        <div class="svc-cat-title">☀️ 通所系</div>
-        <div class="svc-grid" id="cat_tsusho"></div>
-      </div>
-      <div class="svc-cat">
-        <div class="svc-cat-title">🏥 入所・施設系</div>
-        <div class="svc-grid" id="cat_shisetsu"></div>
-      </div>
-      <div class="svc-cat">
-        <div class="svc-cat-title">🔄 多機能系</div>
-        <div class="svc-grid" id="cat_taki"></div>
-      </div>
-      <div class="svc-cat">
-        <div class="svc-cat-title">📋 ケアマネ・その他</div>
-        <div class="svc-grid" id="cat_other"></div>
-      </div>
-
-      <div class="svc-cat">
-        <div class="svc-cat-title">🏠 住宅型有料老人ホーム</div>
-        <label class="svc-item" style="background:var(--warn-light);border-color:var(--warn)">
-          <input type="checkbox" id="chk_jutakugata" onchange="toggleJutakuNote()">
-          住宅型有料老人ホームを運営している
+      <!-- 住宅型チェック：サービス選択とは独立 -->
+      <div style="margin-bottom:12px;padding:10px 14px;background:var(--warn-light);border:1px solid var(--warn);border-radius:8px">
+        <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer">
+          <input type="checkbox" id="jutakugata" onchange="toggleJutaku()" style="accent-color:var(--warn);width:16px;height:16px">
+          <span>住宅型有料老人ホームを運営している</span>
         </label>
-        <div id="jutakuNote" class="notice warn" style="display:none;margin-top:8px">
-          📌 <strong>住宅型有料老人ホームの建物・居住部分は対象外です。</strong><br>
+        <div id="jutakuNotice" style="display:none;margin-top:8px;font-size:12px;color:var(--warn-text);line-height:1.6">
+          📌 住宅型有料老人ホームの建物・居住部分は<strong>対象外</strong>です。<br>
           ただし、入居者に提供している「訪問介護」「訪問看護」等は対象になります。<br>
-          → 上のリストから実際に提供しているサービスをチェックしてください。<br>
+          → 下のリストから実際に提供しているサービスをチェックしてください。<br>
           <small>※ 特定施設入居者生活介護の指定を受けている場合は【入所・施設系】に該当します。</small>
         </div>
       </div>
+
+      <div class="svc-cat"><div class="svc-cat-title">🏠 訪問系</div><div class="svc-grid" id="cat_houmon"></div></div>
+      <div class="svc-cat"><div class="svc-cat-title">☀️ 通所系</div><div class="svc-grid" id="cat_tsusho"></div></div>
+      <div class="svc-cat"><div class="svc-cat-title">🏥 入所・施設系</div><div class="svc-grid" id="cat_shisetsu"></div></div>
+      <div class="svc-cat"><div class="svc-cat-title">🔄 多機能系</div><div class="svc-grid" id="cat_taki"></div></div>
+      <div class="svc-cat"><div class="svc-cat-title">📋 ケアマネ・その他</div><div class="svc-grid" id="cat_other"></div></div>
     </div>
   </div>
 
-  <!-- 障害福祉サービス選択 -->
+  <!-- Q2b: shogai -->
   <div id="q2shogai" style="display:none">
     <div class="fg">
-      <label>Q2b. 運営している障害福祉サービスをすべてチェックしてください</label>
+      <label>Q2b. 提供している障害福祉サービスを選択</label>
+      <div class="svc-cat"><div class="svc-cat-title">🏠 訪問系</div><div class="svc-grid" id="scat_houmon"></div></div>
+      <div class="svc-cat"><div class="svc-cat-title">☀️ 日中活動系</div><div class="svc-grid" id="scat_nicchu"></div></div>
+      <div class="svc-cat"><div class="svc-cat-title">🏘️ 居住系</div><div class="svc-grid" id="scat_kyoju"></div></div>
+      <div class="svc-cat"><div class="svc-cat-title">👶 障害児</div><div class="svc-grid" id="scat_jidou"></div></div>
+      <div class="svc-cat"><div class="svc-cat-title">📋 その他</div><div class="svc-grid" id="scat_sonota"></div></div>
+    </div>
+  </div>
 
-      <div class="svc-cat">
-        <div class="svc-cat-title">🏠 訪問系</div>
-        <div class="svc-grid" id="scat_houmon"></div>
+  <!-- Q2c: Office grouping -->
+  <div id="q2c" style="display:none">
+    <div class="fg">
+      <label>Q2c. 同じ事業所（同じ場所・同じスタッフ）で提供しているサービスはありますか？</label>
+      <div class="notice info" style="margin-top:6px">
+        📌 補助金は事業所ごとに配分を設計する必要があります（事業所間の融通は不可）。<br>
+        デフォルトは全て同一事業所（A）です。異なる事業所で提供しているサービスは「事業所B」「事業所C」に変更してください。
       </div>
-      <div class="svc-cat">
-        <div class="svc-cat-title">☀️ 日中活動系</div>
-        <div class="svc-grid" id="scat_nicchu"></div>
-      </div>
-      <div class="svc-cat">
-        <div class="svc-cat-title">🏘️ 居住系</div>
-        <div class="svc-grid" id="scat_kyoju"></div>
-      </div>
-      <div class="svc-cat">
-        <div class="svc-cat-title">👶 障害児</div>
-        <div class="svc-grid" id="scat_jidou"></div>
-      </div>
-      <div class="svc-cat">
-        <div class="svc-cat-title">📋 その他</div>
-        <div class="svc-grid" id="scat_sonota"></div>
+      <div id="grpList"></div>
+      <div id="grpNames" style="margin-top:10px"></div>
+      <div class="notice" style="background:#f8f9fa;border-left:3px solid var(--text3);color:var(--text2);margin-top:8px">
+        💡 よくあるパターン：訪問介護＋居宅介護＋重度訪問介護（同一事業所）／ 訪問看護（別事業所）／ 通所介護＋生活介護（同一建物併設）
       </div>
     </div>
   </div>
 
-  <!-- Q3 処遇改善加算 -->
+  <!-- Q3 -->
   <div id="q3area" style="display:none">
     <div class="fg">
       <label>Q3. 処遇改善加算の算定状況は？</label>
-      <div class="opt-group">
-        <label class="opt-item"><input type="radio" name="q3" value="yes" checked> 算定中（加算Ⅰ〜Ⅳのいずれか）</label>
-        <label class="opt-item"><input type="radio" name="q3" value="maybe"> たぶん算定しているが確認が必要</label>
-        <label class="opt-item"><input type="radio" name="q3" value="no"> 算定していない</label>
+
+      <!-- 介護分 -->
+      <div id="q3kArea" style="display:none">
+        <h3 style="font-size:12px;margin:8px 0 4px">🏥 介護保険サービス</h3>
+        <div class="opt-group">
+          <label class="opt-item"><input type="radio" name="q3k" value="yes" checked onchange="updQ3()"> 算定中（加算Ⅰ〜Ⅳのいずれか）</label>
+          <label class="opt-item"><input type="radio" name="q3k" value="maybe" onchange="updQ3()"> たぶん算定しているが確認が必要</label>
+          <label class="opt-item"><input type="radio" name="q3k" value="no" onchange="updQ3()"> 算定していない</label>
+        </div>
       </div>
+
+      <!-- 障害分 -->
+      <div id="q3sArea" style="display:none">
+        <h3 style="font-size:12px;margin:8px 0 4px">♿ 障害福祉サービス</h3>
+        <div class="opt-group">
+          <label class="opt-item"><input type="radio" name="q3s" value="yes" checked onchange="updQ3()"> 算定中（福祉・介護職員処遇改善加算Ⅰ〜Ⅳ）</label>
+          <label class="opt-item"><input type="radio" name="q3s" value="maybe" onchange="updQ3()"> たぶん算定しているが確認が必要</label>
+          <label class="opt-item"><input type="radio" name="q3s" value="no" onchange="updQ3()"> 算定していない</label>
+        </div>
+      </div>
+
       <div id="q3maybe" style="display:none" class="notice info">
-        💡 <strong>確認方法：</strong>毎月の介護報酬請求で「処遇改善加算」の単位数が計上されていれば算定中です。請求ソフトの「加算一覧」または「体制届出状況」をご確認ください。不明な場合は担当コンサルタントにお問い合わせください。
+        💡 <strong>確認方法：</strong>毎月の報酬請求で「処遇改善加算」の単位数が計上されていれば算定中です。請求ソフトの「加算一覧」または「体制届出状況」をご確認ください。不明な場合は担当コンサルタントにお問い合わせください。
       </div>
     </div>
   </div>
@@ -291,9 +267,8 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 </div>
 </div>
 
-<!-- ==================== STEP 1: 報酬入力 ==================== -->
+<!-- ==================== STEP 1 ==================== -->
 <div class="sec" id="sec1">
-
 <div class="acc">
   <div class="acc-h open" onclick="toggleAcc(this)">
     <span>📌 入力する金額について（タップで開閉）</span><span class="arr">▼</span>
@@ -301,7 +276,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
   <div class="acc-b open" style="font-size:12px;color:var(--text2);line-height:1.8">
     <strong>■ 何月分の数字？</strong><br>
     【介護】原則 → <strong>令和7年（2025年）12月</strong>のサービス提供分<br>
-    【障害福祉】原則 → <strong>令和6年（2024年）12月</strong>のサービス提供分<br>
+    【障害福祉】原則 → <strong>令和7年（2025年）12月</strong>のサービス提供分<br>
     <small>※ 国保連への請求は翌月10日です。「R8年1月請求分」＝「R7年12月提供分」</small><br><br>
     <strong>■ まだ基準月が来ていない場合</strong><br>
     直近の通常月の報酬額（例：R7年10月や11月分）を入力すれば概算が出ます。<br><br>
@@ -318,27 +293,27 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 </div>
 
 <div class="card">
-  <h2>💰 基準月の選択</h2>
+  <h2>📊 基準月の選択</h2>
   <div class="fg">
     <select id="baseMonth" onchange="updateBaseLabel()">
-      <option value="12">12月分（原則）</option>
+      <option value="12" selected>12月分（原則）</option>
       <option value="1">1月分</option>
       <option value="2">2月分</option>
       <option value="3">3月分</option>
       <option value="est">まだ確定前（直近月で概算）</option>
     </select>
-    <div class="help">⚠️ 12月以外を選択する場合は「12月が著しく低い」ことが条件です。申請後の変更は不可。</div>
+    <div class="help">⚠️ 12月以外を選択する場合は「12月が著しく低い」ことが条件です。</div>
   </div>
 </div>
 
 <div class="card" id="kaigoRevCard" style="display:none">
-  <h2>🏥 介護サービスの<span id="baseLabelK">R7年12月分</span>報酬額（万円）</h2>
-  <div id="kaigoRevInputs"></div>
+  <h2>🏥 介護サービスの <span id="kBaseLabel">R7年12月分</span> 報酬額</h2>
+  <div id="kaigoRevRows"></div>
 </div>
 
 <div class="card" id="shogaiRevCard" style="display:none">
-  <h2>♿ 障害福祉サービスの<span id="baseLabelS">R6年12月分</span>報酬額（万円）</h2>
-  <div id="shogaiRevInputs"></div>
+  <h2>♿ 障害福祉サービスの <span id="sBaseLabel">R7年12月分</span> 報酬額</h2>
+  <div id="shogaiRevRows"></div>
 </div>
 
 <div class="nav-row">
@@ -347,114 +322,58 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 </div>
 </div>
 
-<!-- ==================== STEP 2: 要件 ==================== -->
+<!-- ==================== STEP 2 ==================== -->
 <div class="sec" id="sec2">
-
-<div id="kaigoReqCard" style="display:none" class="card">
-  <h2 style="color:var(--kaigo)">🏥 介護分野の要件</h2>
-
-  <div class="fg">
-    <label>ケアプランデータ連携システム</label>
-    <select id="k_careplan"><option value="yes">加入済み</option><option value="pledge">誓約予定</option><option value="no">未加入</option></select>
-    <div class="help">
-      <strong>やさしく言うと：</strong>ケアマネと介護事業所の間でケアプランデータをオンラインでやり取りする国のシステムです。現在ライセンス料が<strong>無料</strong>なので、加入するだけで補助金の上乗せ（②）が得られます。<br>
-      <a href="https://www.careplan-renkei.jp/" target="_blank">→ 詳細はこちら</a>
-    </div>
-  </div>
-
-  <div class="fg" id="seisanRow" style="display:none">
-    <label>生産性向上推進体制加算（施設系のみ）</label>
-    <select id="k_seisan"><option value="no">未算定</option><option value="yes">Ⅰ又はⅡを算定中</option><option value="pledge">誓約予定</option></select>
-    <div class="help">
-      <strong>やさしく言うと：</strong>ICT活用や業務改善の体制を整えた施設が算定できる加算です。算定中、または「算定する」と誓約することで上乗せ（②）が得られます。
-    </div>
-  </div>
-
-  <div class="fg">
-    <label>職場環境改善の取組</label>
-    <select id="k_shokuba"><option value="yes">実施済み or 計画中</option><option value="no">未実施</option></select>
-    <div class="help">
-      <strong>やさしく言うと：</strong>以下のいずれか1つを「やっている」または「これからやる計画がある」でOKです：<br>
-      ・業務の洗い出し（何にどれだけ時間がかかっているか）<br>
-      ・改善チームの立ち上げ（委員会やプロジェクト）<br>
-      ・役割分担の明確化（誰が何をやるかの見直し）<br>
-      ※ ②の要件を満たしていれば自動的に充足します
-    </div>
-  </div>
-
-  <div class="fg">
-    <label>社会福祉連携推進法人への所属</label>
-    <select id="k_renkei"><option value="no">非所属</option><option value="yes">所属</option></select>
-  </div>
+<div class="card" id="kaigoReqCard" style="display:none">
+  <h2>🏥 介護分野の要件</h2>
+  <div id="kaigoReqRows"></div>
 </div>
 
-<div id="shogaiReqCard" style="display:none" class="card">
-  <h2 style="color:var(--shogai)">♿ 障害福祉分野の要件</h2>
+<div class="card" id="shogaiReqCard" style="display:none">
+  <h2>♿ 障害福祉分野の要件</h2>
   <div class="fg">
     <label>職場環境改善の取組</label>
-    <select id="s_shokuba"><option value="yes">実施済み or 計画中</option><option value="no">未実施</option></select>
-    <div class="help">介護分野と同じ3項目のいずれか。全額を<strong>賃金改善に使用</strong>（職場環境改善経費への充当は不可）。</div>
+    <select id="s_env"><option value="yes">実施済み or 計画中</option><option value="no">未実施</option></select>
+    <div class="help">介護分野と同じ3項目のいずれか。全額を賃金改善に使用。</div>
   </div>
 </div>
 
 <div class="card">
-  <h2>👥 職員数</h2>
-  <div class="dist-row">
-    <div class="fg"><label>介護／福祉職員数（常勤換算）</label><input type="number" id="staff_care" value="" placeholder="例：15" min="0" step="0.1"></div>
-    <div class="fg"><label>その他職員数（看護・事務・相談員等）</label><input type="number" id="staff_other" value="" placeholder="例：10" min="0" step="1"></div>
+  <h2>👥 事業所ごとの職員数</h2>
+  <div class="notice info">
+    📌 補助金は事業所ごとに配分を設計する必要があるため、事業所単位で職員数を入力してください。<br>
+    💡 兼務職員は主たる勤務先でカウントしてください。
   </div>
+  <div id="staffInputArea"></div>
 </div>
 
 <div class="nav-row">
   <button class="nav-btn nav-prev" onclick="goStep(1)">← 戻る</button>
-  <button class="nav-btn nav-next" onclick="calculate();goStep(3)">▶ 計算して結果を見る</button>
+  <button class="nav-btn nav-next" onclick="goStep(3)">次へ → 結果を見る</button>
 </div>
 </div>
 
-<!-- ==================== STEP 3: 結果 ==================== -->
+<!-- ==================== STEP 3 ==================== -->
 <div class="sec" id="sec3">
 <div id="resultArea"></div>
+
 <div class="nav-row">
   <button class="nav-btn nav-prev" onclick="goStep(2)">← 戻る</button>
   <button class="nav-btn nav-next" onclick="goStep(4)">次へ → 配分シミュレーション</button>
 </div>
 </div>
 
-<!-- ==================== STEP 4: 配分 ==================== -->
+<!-- ==================== STEP 4 ==================== -->
 <div class="sec" id="sec4">
 <div class="card">
   <h2>💴 配分シミュレーション</h2>
-  <p style="font-size:12px;color:var(--text2);margin-bottom:10px">STEP 3の補助金額をもとに「誰にいくら払うか」を設計します。</p>
-
-  <div class="fg">
-    <label>配分方法</label>
-    <select id="dist_method">
-      <option value="lump">全額を一時金で一括支給（最もシンプル）</option>
-      <option value="monthly">月額手当で6ヶ月按分</option>
-      <option value="mix">一時金＋月額手当の組み合わせ</option>
-    </select>
-    <div class="help">厚労省は「一時金や臨時の手当として充てることを想定」と明記しています（Q&A問5）。</div>
-  </div>
-
-  <div class="fg">
-    <label>配分比率</label>
-    <select id="dist_ratio">
-      <option value="care100">介護／福祉職員に全額</option>
-      <option value="care70" selected>介護／福祉職員70%：その他30%（推奨）</option>
-      <option value="equal">全職員に均等配分</option>
-      <option value="custom">カスタム</option>
-    </select>
-  </div>
-  <div id="customRatioRow" style="display:none" class="fg">
-    <label>介護／福祉職員への配分割合（%）</label>
-    <input type="number" id="custom_ratio" value="70" min="0" max="100">
-  </div>
+  <div class="notice warn">⚠️ 配分は事業所ごとに設計してください。事業所間での融通は実施要綱で禁止されています。</div>
 </div>
+<div id="distArea"></div>
+<div id="distSummary"></div>
 
-<div id="distResult"></div>
-
-<div class="btn-row">
-  <button class="btn-secondary" onclick="calcDist()">配分を計算する</button>
+<div style="text-align:center;margin-top:16px">
+  <button class="btn-print" onclick="printSection('result')">🖨️ シミュレーション結果を印刷</button>
 </div>
 
 <div class="nav-row">
@@ -463,21 +382,26 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 </div>
 </div>
 
-<!-- ==================== STEP 5: ToDo ==================== -->
+<!-- ==================== STEP 5 ==================== -->
 <div class="sec" id="sec5">
 <div class="card">
   <h2>✅ やることリスト</h2>
   <p style="font-size:12px;color:var(--text2);margin-bottom:8px">チェックを入れながら進めてください。あなたの選択に応じた項目だけ表示しています。</p>
-
   <div class="fg">
     <label>申請パターン</label>
-    <select id="todoPattern" onchange="buildTodo()">
-      <option value="A">Aパターン（2月申請 → 4月支給）※早期に受給したい場合</option>
-      <option value="B">Bパターン（4月申請 → 6月支給）※準備に時間が必要な場合</option>
-    </select>
+    <div class="opt-group" style="flex-direction:row;gap:12px">
+      <label class="opt-item" style="flex:1"><input type="radio" name="todoPat" value="A" checked onchange="buildTodo()"> Aパターン（2月申請→4月支給）</label>
+      <label class="opt-item" style="flex:1"><input type="radio" name="todoPat" value="B" onchange="buildTodo()"> Bパターン（4月申請→6月支給）</label>
+    </div>
   </div>
+  <div class="notice" style="background:#f8f9fa;border-left:3px solid var(--text3);color:var(--text2);font-size:11px">
+    ※ 愛知県が提出先です。名古屋市は指定権者が市のため提出先が異なる場合があります。他県の場合は各都道府県にご確認ください。
+  </div>
+</div>
+<div id="todoArea"></div>
 
-  <div id="todoList"></div>
+<div style="text-align:center;margin-top:16px">
+  <button class="btn-print" onclick="printSection('todo')">🖨️ ToDoリストを印刷</button>
 </div>
 
 <div class="nav-row">
@@ -486,20 +410,16 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 </div>
 </div>
 
-<!-- ==================== STEP 6: FAQ ==================== -->
+<!-- ==================== STEP 6 ==================== -->
 <div class="sec" id="sec6">
-
 <div class="card">
   <h2>❓ よくある質問</h2>
-  <div id="faqList"></div>
+  <div id="faqArea"></div>
 </div>
 
 <div class="card">
-  <h2>📄 職員への説明テンプレート</h2>
-  <p style="font-size:12px;color:var(--text2);margin-bottom:8px">コピーして自由にご利用ください。○○部分を書き換えてください。</p>
-
+  <h2>📝 職員への説明テンプレート</h2>
   <div class="fg">
-    <label>テンプレートの種類</label>
     <select id="tplType" onchange="showTpl()">
       <option value="lump">一時金型</option>
       <option value="monthly">月額手当型</option>
@@ -514,13 +434,18 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
   <table class="cmp">
     <tr><th style="width:120px">項目</th><th style="background:var(--kaigo-light)">🏥 介護</th><th style="background:var(--shogai-light)">♿ 障害福祉</th></tr>
     <tr><td><strong>補助金区分</strong></td><td>3段階（①賃上げ＋②協働化＋③職場環境改善）</td><td>1段階のみ</td></tr>
-    <tr><td><strong>1人あたり目安</strong></td><td>最大 月1.9万円×6ヶ月</td><td>月約9千円×6ヶ月</td></tr>
-    <tr><td><strong>基準月</strong></td><td>原則 R7年12月</td><td>原則 R6年12月</td></tr>
+    <tr><td><strong>1人あたり目安</strong></td><td>最大 月1.9万円×6ヶ月</td><td>月約1万円×6ヶ月</td></tr>
+    <tr><td><strong>基準月</strong></td><td>原則 R7年12月</td><td>原則 R7年12月</td></tr>
     <tr><td><strong>用途</strong></td><td>①②→賃金 / ③→環境改善 or 賃金</td><td><strong>全額賃金のみ</strong></td></tr>
     <tr><td><strong>対象外</strong></td><td>居宅療養管理指導、福祉用具</td><td>計画相談、障害児相談、地域相談</td></tr>
     <tr><td><strong>住宅型有老</strong></td><td>ハコは対象外、中のサービスは対象</td><td>─</td></tr>
+    <tr><td><strong>事業所間融通</strong></td><td colspan="2">不可（「著しく偏った配分」として禁止。Vol.1454 7(1)①）</td></tr>
   </table>
   </div>
+</div>
+
+<div style="text-align:center;margin-top:16px">
+  <button class="btn-print" onclick="printSection('faq')">🖨️ FAQ・テンプレートを印刷</button>
 </div>
 
 <div class="nav-row">
@@ -529,427 +454,495 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 </div>
 </div>
 
+<!-- Print target containers -->
+<div id="printResult" class="sec"></div>
+<div id="printTodo" class="sec"></div>
+<div id="printFaq" class="sec"></div>
+
 <!-- Footer -->
 <div class="footer">
-  <strong>TRINITY PARTNERS</strong> ─ 処遇改善賃上げ補助金シミュレーター v3<br>
+  <strong>TRINITY PARTNERS</strong> ─ 処遇改善賃上げ補助金シミュレーター v4<br>
   本ツールは概算シミュレーション用です。正式な交付率は<a href="https://www.mhlw.go.jp/content/001623447.pdf" target="_blank">厚労省Vol.1454</a>をご確認ください。<br>
-  障害福祉の交付率はR6補正公表値ベース（R7補正正式値は未公表）。最終更新：2026/02/07
+  最終更新：2026/02/08
 </div>
 
 </div><!-- /wrap -->
 
 <script>
 // ===== DATA =====
-const K_SVC = {
-  houmon_kaigo:   {n:'訪問介護（ホームヘルプ）',cat:'houmon',t:1,r1:.156,r2:.060,r3:.048},
-  yakan_houmon:   {n:'夜間対応型訪問介護',cat:'houmon',t:1,r1:.132,r2:.042,r3:.030},
-  teiki_houmon:   {n:'定期巡回・随時対応型',cat:'houmon',t:1,r1:.132,r2:.042,r3:.030},
-  houmon_nyuyoku: {n:'訪問入浴介護',cat:'houmon',t:1,r1:.132,r2:.042,r3:.030},
-  tsusho_kaigo:   {n:'通所介護（デイサービス）',cat:'tsusho',t:1,r1:.126,r2:.036,r3:.030},
-  chiiki_tsusho:  {n:'地域密着型通所介護（小規模デイ）',cat:'tsusho',t:1,r1:.168,r2:.042,r3:.036},
-  tsusho_riha:    {n:'通所リハビリ（デイケア）',cat:'tsusho',t:1,r1:.114,r2:.030,r3:.024},
-  ninchi_tsusho:  {n:'認知症対応型デイ',cat:'tsusho',t:1,r1:.216,r2:.072,r3:.060},
-  tokutei:        {n:'特定施設（介護付き有老等）',cat:'shisetsu',t:2,r1:.132,r2:.042,r3:.036},
-  chiiki_tokutei: {n:'地域密着型特定施設',cat:'shisetsu',t:2,r1:.132,r2:.042,r3:.036},
-  ninchi_gh:      {n:'認知症GH',cat:'shisetsu',t:2,r1:.150,r2:.066,r3:.054},
-  kaigo_fukushi:  {n:'特別養護老人ホーム（特養）',cat:'shisetsu',t:2,r1:.144,r2:.048,r3:.042},
-  chiiki_tokuyo:  {n:'地域密着型特養',cat:'shisetsu',t:2,r1:.144,r2:.048,r3:.042},
-  tanki_seikatsu: {n:'ショートステイ（生活介護型）',cat:'shisetsu',t:2,r1:.144,r2:.048,r3:.042},
-  kaigo_hoken:    {n:'介護老人保健施設（老健）',cat:'shisetsu',t:2,r1:.102,r2:.030,r3:.024},
-  tanki_rouken:   {n:'ショートステイ（療養型・老健）',cat:'shisetsu',t:2,r1:.102,r2:.030,r3:.024},
-  kaigo_iryouin:  {n:'介護医療院',cat:'shisetsu',t:2,r1:.078,r2:.018,r3:.012},
-  tanki_iryouin:  {n:'ショートステイ（医療院）',cat:'shisetsu',t:2,r1:.078,r2:.018,r3:.012},
-  sho_taki:       {n:'小規模多機能型居宅介護',cat:'taki',t:2,r1:.138,r2:.054,r3:.048},
-  kango_sho_taki: {n:'看護小規模多機能型居宅介護',cat:'taki',t:2,r1:.114,r2:.036,r3:.030},
-  houmon_kango:   {n:'訪問看護',cat:'other',t:3,rate:.132},
-  houmon_riha:    {n:'訪問リハビリテーション',cat:'other',t:3,rate:.108},
-  kyotaku_shien:  {n:'居宅介護支援（ケアマネ）',cat:'other',t:3,rate:.150},
+const K_SVC={
+  houmon_kaigo:{n:'訪問介護（ホームヘルプ）',cat:'houmon',t:1,r1:.156,r2:.060,r3:.048},
+  yakan_houmon:{n:'夜間対応型訪問介護',cat:'houmon',t:1,r1:.132,r2:.042,r3:.030},
+  teiki_houmon:{n:'定期巡回・随時対応型',cat:'houmon',t:1,r1:.132,r2:.042,r3:.030},
+  houmon_nyuyoku:{n:'訪問入浴介護',cat:'houmon',t:1,r1:.132,r2:.042,r3:.030},
+  tsusho_kaigo:{n:'通所介護（デイサービス）',cat:'tsusho',t:1,r1:.126,r2:.036,r3:.030},
+  chiiki_tsusho:{n:'地域密着型通所介護（小規模デイ）',cat:'tsusho',t:1,r1:.168,r2:.042,r3:.036},
+  tsusho_riha:{n:'通所リハビリ（デイケア）',cat:'tsusho',t:1,r1:.114,r2:.030,r3:.024},
+  ninchi_tsusho:{n:'認知症対応型デイ',cat:'tsusho',t:1,r1:.216,r2:.072,r3:.060},
+  tokutei:{n:'特定施設（介護付き有老等）',cat:'shisetsu',t:2,r1:.132,r2:.042,r3:.036},
+  chiiki_tokutei:{n:'地域密着型特定施設',cat:'shisetsu',t:2,r1:.132,r2:.042,r3:.036},
+  ninchi_gh:{n:'認知症GH',cat:'shisetsu',t:2,r1:.150,r2:.066,r3:.054},
+  kaigo_fukushi:{n:'特別養護老人ホーム（特養）',cat:'shisetsu',t:2,r1:.144,r2:.048,r3:.042},
+  chiiki_tokuyo:{n:'地域密着型特養',cat:'shisetsu',t:2,r1:.144,r2:.048,r3:.042},
+  tanki_seikatsu:{n:'ショートステイ（生活介護型）',cat:'shisetsu',t:2,r1:.144,r2:.048,r3:.042},
+  kaigo_hoken:{n:'介護老人保健施設（老健）',cat:'shisetsu',t:2,r1:.102,r2:.030,r3:.024},
+  tanki_rouken:{n:'ショートステイ（療養型・老健）',cat:'shisetsu',t:2,r1:.102,r2:.030,r3:.024},
+  kaigo_iryouin:{n:'介護医療院',cat:'shisetsu',t:2,r1:.078,r2:.018,r3:.012},
+  tanki_iryouin:{n:'ショートステイ（医療院）',cat:'shisetsu',t:2,r1:.078,r2:.018,r3:.012},
+  sho_taki:{n:'小規模多機能型居宅介護',cat:'taki',t:2,r1:.138,r2:.054,r3:.048},
+  kan_taki:{n:'看護小規模多機能型居宅介護',cat:'taki',t:2,r1:.114,r2:.036,r3:.030},
+  houmon_kango:{n:'訪問看護',cat:'other',t:3,rate:.132},
+  houmon_riha:{n:'訪問リハビリテーション',cat:'other',t:3,rate:.108},
+  kyotaku_shien:{n:'居宅介護支援（ケアマネ）',cat:'other',t:3,rate:.150},
 };
-
-const S_SVC = {
-  kyotaku_kaigo:  {n:'居宅介護',cat:'houmon',rate:.127},
-  judo_houmon:    {n:'重度訪問介護',cat:'houmon',rate:.127},
-  dokou_engo:     {n:'同行援護',cat:'houmon',rate:.127},
-  koudo_engo:     {n:'行動援護',cat:'houmon',rate:.127},
-  seikatsu_kaigo: {n:'生活介護',cat:'nicchu',rate:.072},
-  shuro_ikou:     {n:'就労移行支援',cat:'nicchu',rate:.055},
-  shuro_a:        {n:'就労継続支援A型',cat:'nicchu',rate:.055},
-  shuro_b:        {n:'就労継続支援B型',cat:'nicchu',rate:.055},
-  gh_hokatsu:     {n:'共同生活援助（包括型）',cat:'kyoju',rate:.094},
-  gh_nicchu:      {n:'共同生活援助（日中支援型）',cat:'kyoju',rate:.094},
-  gh_gaibu:       {n:'共同生活援助（外部利用型）',cat:'kyoju',rate:.094},
+const S_SVC={
+  kyotaku_kaigo:{n:'居宅介護',cat:'houmon',rate:.127},
+  judo_houmon:{n:'重度訪問介護',cat:'houmon',rate:.127},
+  dokou_engo:{n:'同行援護',cat:'houmon',rate:.127},
+  koudo_engo:{n:'行動援護',cat:'houmon',rate:.127},
+  seikatsu_kaigo:{n:'生活介護',cat:'nicchu',rate:.072},
+  shuro_ikou:{n:'就労移行支援',cat:'nicchu',rate:.055},
+  shuro_a:{n:'就労継続支援A型',cat:'nicchu',rate:.055},
+  shuro_b:{n:'就労継続支援B型',cat:'nicchu',rate:.055},
+  gh_hokatsu:{n:'共同生活援助（包括型）',cat:'kyoju',rate:.094},
+  gh_nicchu:{n:'共同生活援助（日中支援型）',cat:'kyoju',rate:.094},
+  gh_gaibu:{n:'共同生活援助（外部利用型）',cat:'kyoju',rate:.094},
   shisetsu_nyusho:{n:'施設入所支援',cat:'kyoju',rate:.136},
-  tanki_nyusho:   {n:'短期入所',cat:'kyoju',rate:.136},
-  ryoyo_kaigo:    {n:'療養介護',cat:'kyoju',rate:.136},
-  jidou_hattatsu: {n:'児童発達支援',cat:'jidou',rate:.096},
-  houkago_day:    {n:'放課後等デイサービス',cat:'jidou',rate:.096},
-  jiritsu_kinou:  {n:'自立訓練（機能訓練）',cat:'sonota',rate:.166},
+  tanki_nyusho:{n:'短期入所',cat:'kyoju',rate:.136},
+  ryoyo_kaigo:{n:'療養介護',cat:'kyoju',rate:.136},
+  jidou_hattatsu:{n:'児童発達支援',cat:'jidou',rate:.096},
+  houkago_day:{n:'放課後等デイサービス',cat:'jidou',rate:.096},
+  jiritsu_kinou:{n:'自立訓練（機能訓練）',cat:'sonota',rate:.166},
   jiritsu_seikatsu:{n:'自立訓練（生活訓練）',cat:'sonota',rate:.166},
-  shuro_teichaku: {n:'就労定着支援',cat:'sonota',rate:.055},
-  jiritsu_enjo:   {n:'自立生活援助',cat:'sonota',rate:.055},
+  shuro_teichaku:{n:'就労定着支援',cat:'sonota',rate:.055},
+  jiritsu_enjo:{n:'自立生活援助',cat:'sonota',rate:.055},
 };
 
-// Globals
-let G={field:null,kSel:[],sSel:[],q3:'yes',totalK:0,totalS:0,grandTotal:0};
+// State
+let G={field:null,kSel:[],sSel:[],q3k:'yes',q3s:'yes',offices:{},officeNames:{},results:{}};
 
 // ===== INIT =====
 function init(){
   const catMap={houmon:'cat_houmon',tsusho:'cat_tsusho',shisetsu:'cat_shisetsu',taki:'cat_taki',other:'cat_other'};
   for(const[k,v] of Object.entries(K_SVC)){
     const c=document.getElementById(catMap[v.cat]);
-    if(c) c.innerHTML+=`<label class="svc-item"><input type="checkbox" value="${k}" onchange="updKSel()">${v.n}</label>`;
+    if(c) c.innerHTML+=`<label class="svc-item"><input type="checkbox" value="${k}" onchange="updSel()">${v.n}</label>`;
   }
   const scatMap={houmon:'scat_houmon',nicchu:'scat_nicchu',kyoju:'scat_kyoju',jidou:'scat_jidou',sonota:'scat_sonota'};
   for(const[k,v] of Object.entries(S_SVC)){
     const c=document.getElementById(scatMap[v.cat]);
-    if(c) c.innerHTML+=`<label class="svc-item"><input type="checkbox" value="${k}" onchange="updSSel()">${v.n}</label>`;
+    if(c) c.innerHTML+=`<label class="svc-item"><input type="checkbox" value="${k}" onchange="updSel()">${v.n}</label>`;
   }
-  document.getElementById('dist_ratio').onchange=function(){document.getElementById('customRatioRow').style.display=this.value==='custom'?'block':'none'};
-  document.querySelectorAll('input[name=q3]').forEach(r=>r.onchange=function(){
-    G.q3=this.value;
-    document.getElementById('q3maybe').style.display=this.value==='maybe'?'block':'none';
-  });
-  buildFAQ();
-  showTpl();
+  document.querySelectorAll('input[name=q3k],input[name=q3s]').forEach(r=>r.addEventListener('change',updQ3));
+}
+
+function updQ3(){
+  G.q3k=document.querySelector('input[name=q3k]:checked')?.value||'yes';
+  G.q3s=document.querySelector('input[name=q3s]:checked')?.value||'yes';
+  document.getElementById('q3maybe').style.display=(G.q3k==='maybe'||G.q3s==='maybe')?'block':'none';
 }
 
 // ===== STEP 0 =====
-function selectQ1(v){
-  G.field=v;
-  document.querySelectorAll('#q1group .opt-item').forEach(label=>{
-    const radio=label.querySelector('input[name=q1]');
-    const on=!!(radio&&radio.value===v);
-    label.classList.toggle('selected',on);
-    if(on) radio.checked=true;
-  });
-  document.getElementById('q2kaigo').style.display=(v==='kaigo'||v==='both')?'block':'none';
-  document.getElementById('q2shogai').style.display=(v==='shogai'||v==='both')?'block':'none';
+function selectQ1(){
+  G.field=document.querySelector('input[name=q1]:checked')?.value;
+  const k=G.field==='kaigo'||G.field==='both';
+  const s=G.field==='shogai'||G.field==='both';
+  document.getElementById('q2kaigo').style.display=k?'block':'none';
+  document.getElementById('q2shogai').style.display=s?'block':'none';
   document.getElementById('q3area').style.display='block';
+  document.getElementById('q3kArea').style.display=k?'block':'none';
+  document.getElementById('q3sArea').style.display=s?'block':'none';
   document.getElementById('step0nav').style.display='flex';
+  updSel();
 }
-function toggleJutakuNote(){document.getElementById('jutakuNote').style.display=document.getElementById('chk_jutakugata').checked?'block':'none'}
-function updKSel(){
-  G.kSel=[...document.querySelectorAll('#q2kaigo input[type=checkbox]:checked')].map(e=>e.value).filter(v=>v!=='on');
-  buildKaigoRev();
-  checkSeisan();
+
+function toggleJutaku(){
+  document.getElementById('jutakuNotice').style.display=document.getElementById('jutakugata').checked?'block':'none';
 }
-function updSSel(){
-  G.sSel=[...document.querySelectorAll('#q2shogai input[type=checkbox]:checked')].map(e=>e.value);
-  buildShogaiRev();
+
+function updSel(){
+  G.kSel=[];G.sSel=[];
+  document.querySelectorAll('#q2kaigo input[type=checkbox]:checked').forEach(e=>{if(e.value&&e.id!=='jutakugata')G.kSel.push(e.value);});
+  document.querySelectorAll('#q2shogai input[type=checkbox]:checked').forEach(e=>{if(e.value)G.sSel.push(e.value);});
+  buildGrouping();
 }
-function checkSeisan(){
-  const hasT2=G.kSel.some(k=>K_SVC[k]&&K_SVC[k].t===2);
-  document.getElementById('seisanRow').style.display=hasT2?'block':'none';
+
+function buildGrouping(){
+  const all=[...G.kSel.map(k=>({id:k,name:(K_SVC[k]||{}).n||k,type:'k'})),...G.sSel.map(k=>({id:k,name:(S_SVC[k]||{}).n||k,type:'s'}))];
+  const area=document.getElementById('q2c');
+  if(all.length<2){area.style.display='none';G.offices={};autoAssignOffices(all);return;}
+  area.style.display='block';
+  // Calculate how many office options to show
+  const maxOff=Math.min(all.length,6);
+  const letters='ABCDEF';
+  let h='';
+  all.forEach((svc,i)=>{
+    const cur=G.offices[svc.id]||'A';
+    let opts='';
+    for(let j=0;j<maxOff;j++) opts+=`<option value="${letters[j]}" ${cur===letters[j]?'selected':''}>${letters[j]}</option>`;
+    h+=`<div class="grp-row"><span style="flex:1">${svc.type==='k'?'🏥':'♿'} ${svc.name}</span><select onchange="setOffice('${svc.id}',this.value)">${opts}</select></div>`;
+  });
+  document.getElementById('grpList').innerHTML=h;
+  // Auto-assign if first time
+  if(Object.keys(G.offices).length===0) autoAssignOffices(all);
+  buildOfficeNames();
+}
+
+function autoAssignOffices(all){
+  G.offices={};
+  all.forEach(s=>{G.offices[s.id]='A';});
+}
+
+function setOffice(svcId,letter){
+  G.offices[svcId]=letter;
+  buildOfficeNames();
+}
+
+function buildOfficeNames(){
+  const usedLetters=[...new Set(Object.values(G.offices))].sort();
+  let h='<div style="margin-top:8px"><strong style="font-size:12px">事業所名（任意）</strong></div>';
+  usedLetters.forEach(l=>{
+    const cur=G.officeNames[l]||'';
+    h+=`<div class="fg" style="margin-top:4px"><label>事業所${l}</label><input type="text" value="${cur}" placeholder="例：○○ヘルパーステーション" onchange="G.officeNames['${l}']=this.value" style="font-size:12px"></div>`;
+  });
+  document.getElementById('grpNames').innerHTML=h;
 }
 
 // ===== STEP 1 =====
-function buildKaigoRev(){
-  const box=document.getElementById('kaigoRevInputs');
-  const card=document.getElementById('kaigoRevCard');
-  if(!G.kSel.length){card.style.display='none';return}
-  card.style.display='block';
-  let h='';
-  for(const k of G.kSel){
-    const s=K_SVC[k];if(!s)continue;
-    const rStr=s.t===3?`交付率${(s.rate*100).toFixed(1)}%`:`①${(s.r1*100).toFixed(1)}% +②${(s.r2*100).toFixed(1)}% +③${(s.r3*100).toFixed(1)}%`;
-    h+=`<div class="rev-row"><div><div class="rn">${s.n}</div><div class="rr">${rStr}</div></div><div><input type="number" id="kr_${k}" placeholder="万円" min="0"></div></div>`;
-  }
-  box.innerHTML=h;
-}
-function buildShogaiRev(){
-  const box=document.getElementById('shogaiRevInputs');
-  const card=document.getElementById('shogaiRevCard');
-  if(!G.sSel.length){card.style.display='none';return}
-  card.style.display='block';
-  let h='';
-  for(const k of G.sSel){
-    const s=S_SVC[k];if(!s)continue;
-    h+=`<div class="rev-row"><div><div class="rn">${s.n}</div><div class="rr">交付率${(s.rate*100).toFixed(1)}%</div></div><div><input type="number" id="sr_${k}" placeholder="万円" min="0"></div></div>`;
-  }
-  box.innerHTML=h;
-}
 function updateBaseLabel(){
-  const v=document.getElementById('baseMonth').value;
+  const bm=gv('baseMonth');
   const labels={12:'R7年12月分',1:'R8年1月分',2:'R8年2月分',3:'R8年3月分',est:'直近月（概算）'};
-  const el1=document.getElementById('baseLabelK');
-  const el2=document.getElementById('baseLabelS');
-  if(el1)el1.textContent=labels[v]||'';
-  if(el2){
-    const sLabels={12:'R6年12月分',1:'R7年1月分',2:'R7年2月分',3:'R7年3月分',est:'直近月（概算）'};
-    el2.textContent=sLabels[v]||'';
-  }
+  const lb=labels[bm]||bm;
+  const ek=document.getElementById('kBaseLabel');if(ek)ek.textContent=lb;
+  const es=document.getElementById('sBaseLabel');if(es)es.textContent=lb;
 }
 
-// ===== STEP 2 SHOW/HIDE =====
-function showReqCards(){
-  document.getElementById('kaigoReqCard').style.display=(G.field==='kaigo'||G.field==='both')?'block':'none';
-  document.getElementById('shogaiReqCard').style.display=(G.field==='shogai'||G.field==='both')?'block':'none';
-}
-
-// ===== CALC =====
-function calculate(){
-  const q3=G.q3;
-  const hasShogu=(q3==='yes'||q3==='maybe');
-  const cp=gv('k_careplan');
-  const se=gv('k_seisan');
-  const sk=gv('k_shokuba');
-  const rn=gv('k_renkei');
-  const sSk=gv('s_shokuba');
-
-  let kT1=0,kT2=0,kT3=0,kDetails=[];
-  let advices=[];
-
+function buildRevInputs(){
   // Kaigo
-  for(const k of G.kSel){
-    const s=K_SVC[k];if(!s)continue;
-    const rev=(pf('kr_'+k)||0)*10000;
-    if(!rev)continue;
-    if(s.t===3){
-      const elig=(cp==='yes'||cp==='pledge'||rn==='yes');
-      const a=elig?rev*s.rate:0;
-      kT1+=a; kDetails.push({n:s.n,a1:a,a2:0,a3:0});
-      if(!elig) advices.push(s.n+'：ケアプランデータ連携システムへの加入（無料）で対象に');
-    } else {
-      const h1=hasShogu;
-      let h2=false;
-      if(s.t===1) h2=(cp==='yes'||cp==='pledge'||rn==='yes');
-      else h2=(se==='yes'||se==='pledge'||cp==='yes'||cp==='pledge'||rn==='yes');
-      const h3=h2||(sk==='yes');
-      const a1=h1?rev*s.r1:0;
-      const a2=(h1&&h2)?rev*s.r2:0;
-      const a3=(h1&&h3)?rev*s.r3:0;
-      kT1+=a1;kT2+=a2;kT3+=a3;
-      kDetails.push({n:s.n,a1,a2,a3});
-      if(!h1) advices.push(s.n+'：処遇改善加算の算定（誓約可）で①が取得可能');
-      if(h1&&!h2){
-        if(s.t===1) advices.push(s.n+'：ケアプラン連携加入（無料）で②③が追加');
-        else advices.push(s.n+'：生産性向上推進体制加算の算定で②③が追加');
-      }
-    }
-  }
-  G.totalK=kT1+kT2+kT3;
-
+  const kc=document.getElementById('kaigoRevCard');
+  if(G.kSel.length>0){
+    kc.style.display='block';
+    let h='';
+    G.kSel.forEach(k=>{const s=K_SVC[k];if(!s)return;
+      const rateStr=s.t===3?`交付率 ${(s.rate*100).toFixed(1)}%`:`交付率 ①${(s.r1*100).toFixed(1)}% +②${(s.r2*100).toFixed(1)}% +③${(s.r3*100).toFixed(1)}%`;
+      h+=`<div class="rev-row"><div><div class="rn">${s.n}</div><div class="rr">${rateStr}</div></div><div><input type="number" id="kr_${k}" placeholder="万円" min="0" step="1"></div></div>`;
+    });
+    document.getElementById('kaigoRevRows').innerHTML=h;
+  }else{kc.style.display='none';}
   // Shogai
-  const sElig=hasShogu&&(sSk==='yes');
-  let sTotal=0,sDetails=[];
-  for(const k of G.sSel){
-    const s=S_SVC[k];if(!s)continue;
-    const rev=(pf('sr_'+k)||0)*10000;
-    if(!rev)continue;
-    const a=sElig?rev*s.rate:0;
-    sTotal+=a;sDetails.push({n:s.n,amt:a});
-  }
-  G.totalS=sTotal;
-  G.grandTotal=G.totalK+G.totalS;
-
-  // Render
-  const staffC=pf('staff_care')||1;
-  const staffO=pf('staff_other')||0;
-  const staffAll=staffC+staffO;
-  const perCare=staffC>0?G.grandTotal/staffC/6:0;
-  const isEst=document.getElementById('baseMonth').value==='est';
-
-  let h='';
-  if(isEst) h+='<div class="notice warn">⚠️ 直近月の概算値での試算です。基準月の確定値で再計算してください。</div>';
-
-  // Kaigo results
-  if(G.kSel.length&&kDetails.length){
-    h+=`<div class="results"><h2 style="color:var(--kaigo);border-bottom-color:var(--kaigo-accent)">🏥 介護分野 ─ 概算結果（6ヶ月分）</h2>
-    <div class="result-grid">
-      <div class="r-card"><div class="rl">① 幅広い賃上げ</div><div class="rv">${fmt(kT1)}</div><div class="ru">円</div></div>
-      <div class="r-card"><div class="rl">② 協働化上乗せ</div><div class="rv">${fmt(kT2)}</div><div class="ru">円</div></div>
-      <div class="r-card"><div class="rl">③ 職場環境改善</div><div class="rv">${fmt(kT3)}</div><div class="ru">円</div></div>
-      <div class="r-card main"><div class="rl">介護 合計</div><div class="rv" style="font-size:26px">${fmt(G.totalK)}</div><div class="ru">円（6ヶ月）</div></div>
-    </div>`;
-    // Chart
-    if(kDetails.length>0){
-      const mx=Math.max(...kDetails.map(d=>d.a1+d.a2+d.a3),1);
-      const bH=24,g=4,cW=560;const svgH=kDetails.length*(bH+g)+30;
-      h+=`<div class="chart-wrap"><svg viewBox="0 0 ${cW} ${svgH}" style="width:100%;max-width:${cW}px">`;
-      kDetails.forEach((d,i)=>{
-        const y=i*(bH+g)+4;const w1=d.a1/mx*(cW-200),w2=d.a2/mx*(cW-200),w3=d.a3/mx*(cW-200);
-        h+=`<text x="0" y="${y+16}" font-size="10" fill="#5A6070" font-family="Noto Sans JP">${d.n.substring(0,14)}</text>`;
-        const bx=120;
-        h+=`<rect x="${bx}" y="${y}" width="${Math.max(w1,0)}" height="${bH}" rx="2" fill="#10B981"/>`;
-        h+=`<rect x="${bx+w1}" y="${y}" width="${Math.max(w2,0)}" height="${bH}" fill="#3B82F6"/>`;
-        h+=`<rect x="${bx+w1+w2}" y="${y}" width="${Math.max(w3,0)}" height="${bH}" rx="2" fill="#F59E0B"/>`;
-        h+=`<text x="${bx+w1+w2+w3+4}" y="${y+16}" font-size="9" fill="#5A6070">${fmt(d.a1+d.a2+d.a3)}円</text>`;
-      });
-      h+=`<text x="120" y="${svgH-2}" font-size="8" fill="#8B92A3">■①賃上げ ■②協働化 ■③環境改善</text></svg></div>`;
-    }
-    if(advices.length) {
-      h+=`<div style="margin-top:10px;padding:10px 14px;background:#fff;border:1px solid var(--warn);border-radius:8px"><div style="font-size:12px;font-weight:600;color:var(--warn-text);margin-bottom:4px">💡 さらに増やすには</div>`;
-      advices.forEach(a=>h+=`<div style="font-size:11px;color:var(--text2);padding:2px 0 2px 14px;position:relative"><span style="position:absolute;left:0">→</span>${a}</div>`);
-      h+=`</div>`;
-    }
-    h+=`</div>`;
-  }
-
-  // Shogai results
-  if(G.sSel.length&&sDetails.length){
-    h+=`<div class="results" style="border-color:var(--shogai);background:linear-gradient(135deg,#EFF6FF,#DBEAFE)">
-    <h2 style="color:var(--shogai);border-bottom-color:var(--shogai-accent)">♿ 障害福祉分野 ─ 概算結果（6ヶ月分）</h2>`;
-    if(!sElig){
-      h+=`<div class="notice danger">⚠️ 要件未充足のため補助金額は0円と表示されます。`;
-      if(!hasShogu) h+=`処遇改善加算が未算定です。`;
-      if(sSk!=='yes') h+=`職場環境改善の取組が未実施です。`;
-      h+=`</div>`;
-    }
-    h+=`<div class="result-grid">
-      <div class="r-card" style="border:2px solid var(--shogai)"><div class="rl">障害福祉 合計</div><div class="rv" style="color:var(--shogai);font-size:26px">${fmt(sTotal)}</div><div class="ru">円（6ヶ月）</div></div>
-    </div>`;
-    h+=`<div class="notice" style="background:var(--warn-light);border-left:3px solid var(--warn);color:var(--warn-text);margin-top:8px;font-size:11px">交付率はR6補正公表値ベース。R7補正の正式値が公表され次第更新が必要です。</div>`;
-    h+=`</div>`;
-  }
-
-  // Grand total
-  if(G.grandTotal>0){
-    h+=`<div class="results" style="border-color:var(--purple);background:var(--purple-light)">
-    <h2 style="color:var(--purple);border-bottom-color:var(--purple)">🎯 補助金 総合計</h2>
-    <div class="result-grid">
-      <div class="r-card" style="border:2px solid var(--purple)"><div class="rl">全分野合計</div><div class="rv" style="color:var(--purple);font-size:30px">${fmt(G.grandTotal)}</div><div class="ru">円（6ヶ月合計）</div></div>
-      <div class="r-card"><div class="rl">介護/福祉職員1人あたり月額</div><div class="rv" style="font-size:18px;color:var(--purple)">約${fmt(Math.round(perCare))}</div><div class="rs">常勤換算${staffC}人で計算</div></div>
-      <div class="r-card"><div class="rl">全従事者1人あたり月額</div><div class="rv" style="font-size:18px;color:var(--purple)">約${fmt(Math.round(staffAll>0?G.grandTotal/staffAll/6:0))}</div><div class="rs">全${staffAll}人で計算</div></div>
-    </div></div>`;
-  }
-
-  document.getElementById('resultArea').innerHTML=h;
+  const sc=document.getElementById('shogaiRevCard');
+  if(G.sSel.length>0){
+    sc.style.display='block';
+    let h='';
+    G.sSel.forEach(k=>{const s=S_SVC[k];if(!s)return;
+      h+=`<div class="rev-row"><div><div class="rn">${s.n}</div><div class="rr">交付率 ${(s.rate*100).toFixed(1)}%</div></div><div><input type="number" id="sr_${k}" placeholder="万円" min="0" step="1"></div></div>`;
+    });
+    document.getElementById('shogaiRevRows').innerHTML=h;
+  }else{sc.style.display='none';}
 }
 
-// ===== STEP 4: DIST =====
-function calcDist(){
-  if(!G.grandTotal){document.getElementById('distResult').innerHTML='<div class="notice warn">先にSTEP 3で計算を実行してください。</div>';return}
-  const method=gv('dist_method');
-  const ratioSel=gv('dist_ratio');
-  let careRatio=0.7;
-  if(ratioSel==='care100') careRatio=1;
-  else if(ratioSel==='equal'){const sc=pf('staff_care')||1;const so=pf('staff_other')||0;careRatio=sc/(sc+so)}
-  else if(ratioSel==='custom') careRatio=(pf('custom_ratio')||70)/100;
+// ===== STEP 2 =====
+function buildReqCards(){
+  const hasK=G.kSel.length>0;
+  const hasS=G.sSel.length>0;
+  document.getElementById('kaigoReqCard').style.display=hasK?'block':'none';
+  document.getElementById('shogaiReqCard').style.display=hasS?'block':'none';
+  if(hasK) buildKaigoReqs();
+  buildStaffInputs();
+}
 
-  const total=G.grandTotal;
-  const fukuri=Math.round(total*0.15);
-  const net=total-fukuri;
-  const forCare=Math.round(net*careRatio);
-  const forOther=net-forCare;
-  const sc=pf('staff_care')||1;
-  const so=pf('staff_other')||0;
-  const perCare=sc>0?forCare/sc:0;
-  const perOther=so>0?forOther/so:0;
-
-  let h=`<div class="card" style="border:2px solid var(--purple)"><h2 style="color:var(--purple)">💴 配分結果</h2>
-  <table class="cmp" style="font-size:12px">
-    <tr><td>補助金総額</td><td style="text-align:right;font-weight:700">${fmt(total)} 円</td></tr>
-    <tr><td>うち事業主負担概算（15%）</td><td style="text-align:right">▲ ${fmt(fukuri)} 円</td></tr>
-    <tr style="border-top:2px solid var(--border)"><td><strong>職員への支給可能額</strong></td><td style="text-align:right;font-weight:900;font-size:16px;color:var(--purple)">${fmt(net)} 円</td></tr>
-  </table>`;
-
-  if(method==='lump'){
-    h+=`<h3>一時金（一括支給）の場合</h3>
-    <table class="cmp" style="font-size:12px">
-      <tr><th></th><th>配分額</th><th>人数</th><th>1人あたり</th></tr>
-      <tr><td>介護/福祉職員</td><td>${fmt(forCare)}円</td><td>${sc}人</td><td style="font-weight:700">${fmt(Math.round(perCare))}円</td></tr>
-      ${so>0?`<tr><td>その他職員</td><td>${fmt(forOther)}円</td><td>${so}人</td><td style="font-weight:700">${fmt(Math.round(perOther))}円</td></tr>`:''}
-    </table>`;
-  } else if(method==='monthly'){
-    h+=`<h3>月額手当（6ヶ月按分）の場合</h3>
-    <table class="cmp" style="font-size:12px">
-      <tr><th></th><th>月額1人あたり</th><th>× 6ヶ月</th></tr>
-      <tr><td>介護/福祉職員</td><td style="font-weight:700">${fmt(Math.round(perCare/6))}円/月</td><td>${fmt(Math.round(perCare))}円</td></tr>
-      ${so>0?`<tr><td>その他職員</td><td style="font-weight:700">${fmt(Math.round(perOther/6))}円/月</td><td>${fmt(Math.round(perOther))}円</td></tr>`:''}
-    </table>`;
-  } else {
-    h+=`<h3>組み合わせの場合</h3><p style="font-size:12px;color:var(--text2)">一時金と月額手当を自由に組み合わせてください。総額が ${fmt(net)}円 以内に収まればOKです。</p>`;
+function buildKaigoReqs(){
+  const hasFacility=G.kSel.some(k=>K_SVC[k]&&K_SVC[k].t===2);
+  let h=`
+    <div class="fg"><label>ケアプランデータ連携システム</label>
+      <select id="k_cp"><option value="yes">加入済み</option><option value="pledge">誓約予定</option><option value="no">未加入</option></select>
+      <div class="help">やさしく言うと：ケアマネと介護事業所の間でケアプランデータをオンラインでやり取りする国のシステムです。現在ライセンス料が無料なので、加入するだけで補助金の上乗せ（②）が得られます。</div>
+    </div>`;
+  if(hasFacility){
+    h+=`<div class="fg"><label>生産性向上推進体制加算（施設系のみ）</label>
+      <select id="k_prod"><option value="no">未算定</option><option value="yes">Ⅰ又はⅡを算定中</option><option value="pledge">誓約予定</option></select>
+      <div class="help">やさしく言うと：ICT活用や業務改善の体制を整えた施設が算定できる加算です。</div>
+    </div>`;
   }
-
-  // Warnings
-  if(so>0 && perOther>perCare){
-    h+=`<div class="notice danger" style="margin-top:8px">⚠️ <strong>「その他職員」の1人あたり額が「介護/福祉職員」を上回っています。</strong><br>実施要綱は「介護職員への配分を基本」としています。偏りと判断されるリスクがあります。</div>`;
+  h+=`<div class="fg"><label>職場環境改善の取組</label>
+    <select id="k_env"><option value="yes">実施済み or 計画中</option><option value="no">未実施</option></select>
+    <div class="help">業務の洗い出し / 改善チームの立ち上げ / 役割分担の明確化 のいずれか1つでOK。②の要件を満たしていれば自動充足。</div>
+  </div>
+  <div class="fg"><label>社会福祉連携推進法人への所属</label>
+    <select id="k_renkei"><option value="no">非所属</option><option value="yes">所属</option></select>
+  </div>`;
+  document.getElementById('kaigoReqRows').innerHTML=h;
+  // Add 表3 note if relevant services selected
+  const hasT3=G.kSel.some(k=>K_SVC[k]&&K_SVC[k].t===3);
+  if(hasT3){
+    document.getElementById('kaigoReqRows').innerHTML+=`<div class="notice info" style="margin-top:8px">
+      📌 <strong>表3サービスの補足</strong><br>
+      ─ <strong>訪問看護・訪問リハ：</strong>処遇改善加算の算定は不要。CP連携加入 or 連携推進法人所属が要件。<br>
+      ─ <strong>居宅介護支援：</strong>CP連携は不要。処遇改善加算の算定が要件。
+    </div>`;
   }
-  h+=`<div class="notice info" style="margin-top:8px;font-size:11px">
-    ※ 法定福利費15%は概算です。正確な率は社労士にご確認ください。<br>
-    ※ 法定福利費の事業主負担増加分は補助金から充当可能です（Q&A問2）。<br>
-    ※ 金額は税引前です。所得税・住民税が源泉徴収されます。
+}
+
+function buildStaffInputs(){
+  const allSvcs=[...G.kSel.map(k=>({id:k,name:(K_SVC[k]||{}).n,type:'k'})),...G.sSel.map(k=>({id:k,name:(S_SVC[k]||{}).n,type:'s'}))];
+  if(allSvcs.length===1){
+    G.offices[allSvcs[0].id]='A';
+    G.officeNames['A']=G.officeNames['A']||'';
+  }
+  const officeMap={};
+  allSvcs.forEach(s=>{const l=G.offices[s.id]||'A';if(!officeMap[l])officeMap[l]=[];officeMap[l].push(s);});
+  let h='';
+  Object.keys(officeMap).sort().forEach(l=>{
+    const svcs=officeMap[l];
+    const nm=G.officeNames[l]||('事業所'+l);
+    const svcNames=svcs.map(s=>(s.type==='k'?'🏥':'♿')+' '+s.name).join(' ／ ');
+    h+=`<div class="office-card">
+      <h3>🏢 ${nm}</h3>
+      <div class="office-svcs">${svcNames}</div>
+      <div class="fg"><label>介護／福祉職員数（常勤換算）</label><input type="number" id="staff_care_${l}" placeholder="人数" min="0" step="0.5"></div>
+      <div class="fg"><label>その他職員数（事務・相談員等）</label><input type="number" id="staff_other_${l}" placeholder="人数" min="0" step="0.5"></div>
+    </div>`;
+  });
+  document.getElementById('staffInputArea').innerHTML=h;
+}
+
+// ===== STEP 3: CALCULATE =====
+function calculate(){
+  const cp=gv('k_cp');const prod=gv('k_prod');const env=gv('k_env');const renkei=gv('k_renkei');
+  const hasCP=cp==='yes'||cp==='pledge';
+  const hasProd=prod==='yes'||prod==='pledge';
+  const hasEnv=env==='yes'||hasCP;
+  const hasRenkei=renkei==='yes';
+  const q3kOk=G.q3k==='yes'||G.q3k==='maybe'; // 介護の処遇改善加算
+
+  // Build office map
+  const allSvcs=[...G.kSel.map(k=>({id:k,type:'k'})),...G.sSel.map(k=>({id:k,type:'s'}))];
+  const officeMap={};
+  allSvcs.forEach(s=>{const l=G.offices[s.id]||'A';if(!officeMap[l])officeMap[l]=[];officeMap[l].push(s);});
+
+  G.results={};let grandTotal=0;
+  let html='';
+
+  Object.keys(officeMap).sort().forEach(l=>{
+    const svcs=officeMap[l];
+    const nm=G.officeNames[l]||('事業所'+l);
+    const staffC=pf('staff_care_'+l);
+    const staffO=pf('staff_other_'+l);
+    let officeTotal=0;
+    let rows='';
+
+    svcs.forEach(svc=>{
+      const rev=pf((svc.type==='k'?'kr_':'sr_')+svc.id)*10000;
+      let sub=0;
+      if(svc.type==='k'){
+        const s=K_SVC[svc.id];if(!s)return;
+        if(s.t===3){
+          // 表3: 居宅介護支援=処遇改善加算算定が要件 / 訪問看護・訪問リハ=CP or 連携推進法人
+          let meets=false;
+          if(svc.id==='kyotaku_shien') meets=q3kOk;
+          else meets=(hasCP||hasRenkei);
+          sub=meets?rev*s.rate:0;
+          rows+=`<tr><td>🏥 ${s.n}</td><td colspan="2" style="text-align:right;font-weight:700">${fmt(sub)}円${!meets?' <span style="color:var(--danger);font-size:10px">※要件未充足</span>':''}</td></tr>`;
+        }else{
+          const a1=rev*s.r1;
+          const a2=(s.t===1?(hasCP||hasRenkei):(hasProd||hasCP||hasRenkei))?rev*s.r2:0;
+          const a3=hasEnv?rev*s.r3:0;
+          sub=a1+a2+a3;
+          rows+=`<tr><td>🏥 ${s.n}</td><td style="text-align:right;font-size:11px">①${fmt(a1)} +②${fmt(a2)} +③${fmt(a3)}</td><td style="text-align:right;font-weight:700">${fmt(sub)}円</td></tr>`;
+        }
+      }else{
+        const s=S_SVC[svc.id];if(!s)return;
+        sub=rev*s.rate;
+        rows+=`<tr><td>♿ ${s.n}</td><td colspan="2" style="text-align:right;font-weight:700">${fmt(sub)}円</td></tr>`;
+      }
+      officeTotal+=sub;
+    });
+
+    grandTotal+=officeTotal;
+    const perCare=staffC>0?Math.round(officeTotal/staffC/6):0;
+    G.results[l]={total:officeTotal,staffC,staffO,name:nm,svcs};
+
+    html+=`<div class="office-card">
+      <h3>🏢 ${nm}</h3>
+      <table style="width:100%;border-collapse:collapse;font-size:12px">${rows}</table>
+      <div class="office-total">事業所${l} 合計：${fmt(officeTotal)}円（6ヶ月）</div>
+      ${staffC>0?`<div style="font-size:12px;color:var(--text2);text-align:center">介護/福祉職員1人あたり月額目安：約 <strong>${fmt(perCare)}円</strong></div>`:''}
+    </div>`;
+  });
+
+  html+=`<div class="results"><div style="text-align:center">
+    <div style="font-size:12px;color:var(--text2)">🎯 補助金 法人合計</div>
+    <div style="font-size:28px;font-weight:900;color:var(--kaigo)">${fmt(grandTotal)}円</div>
+    <div style="font-size:11px;color:var(--text3)">（6ヶ月分）</div>
   </div></div>`;
 
-  document.getElementById('distResult').innerHTML=h;
+  html+=`<div class="notice warn">⚠️ 事業所間での補助金の融通はできません。各事業所に交付された補助額の範囲内で配分してください。（出典：Vol.1454 実施要綱 7(1)①）</div>`;
+
+  if(gv('baseMonth')==='est') html+=`<div class="notice danger">⚠️ 直近月の概算値での試算です。基準月（R7年12月）の確定値で再計算してください。</div>`;
+
+  G.grandTotal=grandTotal;
+  document.getElementById('resultArea').innerHTML=html;
+}
+
+// ===== STEP 4: DISTRIBUTION =====
+function buildDistribution(){
+  let html='';
+  Object.keys(G.results).sort().forEach(l=>{
+    const r=G.results[l];
+    if(!r||r.total===0)return;
+    html+=`<div class="office-card">
+      <h3>🏢 ${r.name}（補助金 ${fmt(r.total)}円）</h3>
+      <div class="dist-box">
+        <div class="fg"><label>配分方法</label><select id="dm_${l}"><option value="lump">全額を一時金で一括支給</option><option value="monthly">月額手当で6ヶ月按分</option><option value="mix">一時金＋手当の組合せ</option></select></div>
+        <div class="fg"><label>配分比率（介護/福祉職員 : その他職員）</label>
+          <select id="dr_${l}" onchange="toggleCustomRatio('${l}')">
+            <option value="70">介護/福祉 70% : その他 30%（推奨）</option>
+            <option value="100">介護/福祉 100%（全額）</option>
+            <option value="50">介護/福祉 50% : その他 50%</option>
+            <option value="custom">カスタム</option>
+          </select>
+        </div>
+        <div id="customRatio_${l}" style="display:none" class="fg">
+          <label>介護/福祉職員への配分率（%）</label>
+          <input type="number" id="drCustom_${l}" placeholder="例: 80" min="0" max="100" step="5" value="70">
+          <div class="help">残りがその他職員への配分率になります</div>
+        </div>
+        <button class="btn-secondary" onclick="calcDist('${l}')">配分を計算する</button>
+      </div>
+      <div id="distResult_${l}"></div>
+    </div>`;
+  });
+  document.getElementById('distArea').innerHTML=html;
+}
+
+function toggleCustomRatio(l){
+  const v=gv('dr_'+l);
+  document.getElementById('customRatio_'+l).style.display=v==='custom'?'block':'none';
+}
+
+function calcDist(l){
+  const r=G.results[l];if(!r)return;
+  const selVal=gv('dr_'+l);
+  const ratio=selVal==='custom'?(parseInt(gv('drCustom_'+l))||70):parseInt(selVal)||70;
+  const method=gv('dm_'+l);
+  const burden=Math.round(r.total*0.15);
+  const net=r.total-burden;
+  const forCare=Math.round(net*ratio/100);
+  const forOther=net-forCare;
+  const perCare=r.staffC>0?Math.round(forCare/r.staffC):0;
+  const perOther=r.staffO>0?Math.round(forOther/r.staffO):0;
+  const isMonthly=method==='monthly';
+  const divider=isMonthly?6:1;
+  const label=isMonthly?'月額':'総額';
+
+  let warn='';
+  if(perOther>0&&perCare>0&&perOther>perCare){
+    warn=`<div class="notice warn" style="margin-top:8px">⚠️「その他職員」の1人あたり額が「介護/福祉職員」を上回っています。実施要綱は「介護職員への配分を基本」としています。偏りと判断されるリスクがあります。</div>`;
+  }
+
+  document.getElementById('distResult_'+l).innerHTML=`<div class="dist-result">
+    <table>
+      <tr><td>補助金合計</td><td style="text-align:right;font-weight:700">${fmt(r.total)}円</td></tr>
+      <tr><td>事業主負担概算（15%）</td><td style="text-align:right;color:var(--danger)">▲${fmt(burden)}円</td></tr>
+      <tr><td>職員への支給可能額</td><td style="text-align:right" class="dr-total">${fmt(net)}円</td></tr>
+    </table>
+    <table style="margin-top:8px">
+      <tr style="font-size:11px;color:var(--text3)"><td></td><td>配分額</td><td>人数</td><td>1人あたり${label}</td></tr>
+      <tr><td>介護/福祉</td><td>${fmt(forCare)}円</td><td>${r.staffC}人</td><td style="font-weight:700">${fmt(Math.round(perCare/divider))}円</td></tr>
+      ${r.staffO>0?`<tr><td>その他</td><td>${fmt(forOther)}円</td><td>${r.staffO}人</td><td>${fmt(Math.round(perOther/divider))}円</td></tr>`:''}
+    </table>
+  </div>${warn}
+  <div style="font-size:10px;color:var(--text3);margin-top:6px;line-height:1.5">
+    ※ 法定福利費15%は概算です。正確な率は社労士にご確認ください。<br>
+    ※ 金額は税引前です。所得税・住民税が源泉徴収されます。
+  </div>`;
 }
 
 // ===== STEP 5: TODO =====
 function buildTodo(){
-  const pat=gv('todoPattern');
+  const pat=document.querySelector('input[name=todoPat]:checked')?.value||'A';
   const isA=pat==='A';
-  const q3=G.q3;
-  const cp=gv('k_careplan');
-  const hasJutaku=document.getElementById('chk_jutakugata')?.checked;
+  const hasK=G.kSel.length>0;const hasS=G.sSel.length>0;
+  const cp=gv('k_cp');const hasJutaku=document.getElementById('jutakugata')?.checked;
 
   let items=[];
-  // Phase 1
+  // Prep
   items.push({phase:'準備フェーズ',items:[]});
   items[0].items.push('基準月（R7.12月）のサービス別報酬額を確認する');
-  if(q3==='maybe'||q3==='no') items[0].items.push('処遇改善加算の算定状況を確認する → 未算定の場合は誓約の準備');
-  if(cp==='no') items[0].items.push('ケアプランデータ連携システムの加入を検討する（無料で②③が追加）');
-  items[0].items.push('職場環境改善の取組を1つ選定する（見える化 / 体制構築 / 役割分担）');
+  if(hasK) items[0].items.push('【介護】処遇改善加算の算定状況を確認する');
+  if(hasS) items[0].items.push('【障害】福祉・介護職員処遇改善加算の算定状況を確認する');
+  if(hasK&&G.q3k==='no') items[0].items.push('【介護】処遇改善加算の算定を誓約する準備');
+  if(hasS&&G.q3s==='no') items[0].items.push('【障害】処遇改善加算の算定を誓約する準備');
+  if(hasK&&cp!=='yes') items[0].items.push('ケアプランデータ連携システムの加入を検討する（無料で②③が追加）');
+  items[0].items.push('職場環境改善の取組を1つ選定する（見える化/体制構築/役割分担）');
   items[0].items.push('配分方針を決める（一時金 or 手当 or 混合）');
   items[0].items.push('対象職員の範囲を決める');
   if(hasJutaku) items[0].items.push('住宅型有老：施設内で提供しているサービスごとに報酬額を分けて集計する');
 
-  // Phase 2
+  // Apply
   items.push({phase:`申請フェーズ ─ ${isA?'2月中旬〜':'4月上旬〜'}`,items:[]});
-  items[1].items.push('計画書（様式）をダウンロードする（処遇改善加算の計画書と一体化様式）');
+  items[1].items.push('計画書（様式）をダウンロードする');
   items[1].items.push('計画書を作成する');
   items[1].items.push('法人単位で愛知県に提出する');
   items[1].items.push('国保連への口座情報提供に同意する');
 
-  // Phase 3
+  // Execute
   items.push({phase:`実施フェーズ ─ ${isA?'4月〜':'6月〜'}`,items:[]});
   items[2].items.push('交付決定通知を受領する');
   items[2].items.push('職員へ周知する（巻末の説明テンプレートを活用）');
   items[2].items.push('賃金改善を実施する（一時金支給 or 手当開始）');
 
-  // Phase 4
+  // Report
   items.push({phase:`報告フェーズ ─ ${isA?'6〜8月':'8〜10月'}`,items:[]});
-  items[3].items.push('実績報告書を作成する（補助額 ≦ 賃金改善額＋環境改善額 を確認）');
+  items[3].items.push('実績報告書を作成する（補助額 ≦ 賃金改善額を確認）');
   items[3].items.push('実績報告書を愛知県に提出する');
   items[3].items.push('関連書類を2年間保存する');
 
-  let h='<div class="notice info" style="font-size:11px">※ 愛知県が提出先です。名古屋市は指定権者が市のため提出先が異なる場合があります。他県の場合は各都道府県にご確認ください。</div>';
+  let h='';
   items.forEach(phase=>{
-    h+=`<div class="todo-phase">${phase.phase}</div>`;
+    h+=`<div class="card"><div class="todo-phase">${phase.phase}</div>`;
     phase.items.forEach(item=>{
       h+=`<div class="todo-item"><input type="checkbox" onchange="this.parentElement.classList.toggle('done')"><span>${item}</span></div>`;
     });
+    h+='</div>';
   });
-  document.getElementById('todoList').innerHTML=h;
+  document.getElementById('todoArea').innerHTML=h;
 }
 
-// ===== FAQ =====
-function buildFAQ(){
-  const faqs=[
-    {q:'補助金はいつ振り込まれますか？',a:'Aパターン（2月申請）で4月頃、Bパターン（4月申請）で6月頃です。国保連の登録口座に法人一括で振り込まれます。',tag:'all'},
-    {q:'入金前に先に一時金を払っても大丈夫？',a:'はい。基準月以降に実施した賃金改善であれば、入金前の立替支給も実績報告の対象にできます。（Q&A問12）',tag:'all'},
-    {q:'全額を一時金（賞与・臨時手当）で払えますか？',a:'はい。厚労省は「一時金や臨時の手当として充てることを想定」と明記しています（Q&A問5）。基本給のベースアップも「一概に妨げない」とされていますが、本来の想定は一時金です。',tag:'all'},
-    {q:'パート・非常勤職員も対象ですか？',a:'はい。同一事業所で雇用している職員であれば、雇用形態を問わず対象にできます。',tag:'all'},
-    {q:'派遣社員は対象ですか？',a:'いいえ。派遣社員は派遣元事業所の扱いとなり、派遣先の補助金対象には含められません。',tag:'all'},
-    {q:'法人本部の事務職員は対象ですか？',a:'補助金対象の事業所の業務に従事していると判断できる場合は含められます。（Q&A問4）',tag:'all'},
-    {q:'退職手当に充てられますか？',a:'いいえ。実施要綱で明確に除外されています。',tag:'all'},
-    {q:'住宅型有料老人ホームは対象ですか？',a:'建物・居住部分は対象外です。ただし入居者に提供している訪問介護・訪問看護等は対象になります。特定施設の指定を受けている場合は「特定施設入居者生活介護」として対象です。',tag:'kaigo'},
-    {q:'訪問看護は処遇改善加算の対象外ですが？',a:'この補助金では「表3サービス」として別枠で対象です。ケアプランデータ連携システムへの加入等が要件です（処遇改善加算の算定は不要）。',tag:'kaigo'},
-    {q:'②③の上乗せは必ず取らないとダメ？',a:'いいえ。①だけでも申請できます。ただし②はケアプラン連携加入（無料）で要件を満たせるため、取得を強く推奨します。',tag:'kaigo'},
-    {q:'計画相談支援は対象ですか？',a:'いいえ。計画相談支援、障害児相談支援、地域相談支援（移行・定着）は対象外です。',tag:'shogai'},
-    {q:'令和7年4月以降に開設した事業所は？',a:'対象外です。基準月の時点でサービス提供実績があることが前提です。',tag:'shogai'},
-    {q:'障害福祉の補助金を職場環境改善に使える？',a:'いいえ。障害福祉分野は全額を賃金改善に充てる必要があります。介護分野と異なり、職場環境改善経費への充当は認められていません。',tag:'shogai'},
-  ];
+// ===== STEP 6: FAQ =====
+const FAQS=[
+  {q:'Q1. 補助金はいつ振り込まれますか？',a:'Aパターン（2月申請）で4月頃、Bパターン（4月申請）で6月頃です。国保連の登録口座に法人一括で振り込まれます。',cat:'common'},
+  {q:'Q2. 入金前に先に一時金を払っても大丈夫？',a:'はい。基準月以降に実施した賃金改善であれば、入金前の立替支給も実績報告の対象にできます。',cat:'common'},
+  {q:'Q3. 全額を一時金で払えますか？',a:'はい。厚労省は「一時金や臨時の手当として充てることを想定」と明記しています。基本給のベースアップも「一概に妨げない」とされていますが、本来の想定は一時金です。',cat:'common'},
+  {q:'Q4. パート・非常勤職員も対象ですか？',a:'はい。同一事業所で雇用している職員であれば、雇用形態を問わず対象にできます。',cat:'common'},
+  {q:'Q5. 派遣社員は対象ですか？',a:'いいえ。派遣社員は派遣元事業所の扱いとなり、派遣先の補助金対象には含められません。',cat:'common'},
+  {q:'Q6. 法人本部の事務職員は対象ですか？',a:'補助金対象の事業所の業務に従事していると判断できる場合は含められます。',cat:'common'},
+  {q:'Q7. 退職手当に充てられますか？',a:'いいえ。実施要綱で明確に除外されています。',cat:'common'},
+  {q:'Q8. 住宅型有料老人ホームは対象ですか？',a:'建物・居住部分は対象外です。ただし入居者に提供している訪問介護・訪問看護等は対象になります。特定施設の指定を受けている場合は「特定施設入居者生活介護」として対象です。',cat:'kaigo'},
+  {q:'Q9. 訪問看護は処遇改善加算の対象外ですが？',a:'この補助金では「表3サービス」として別枠で対象です。ケアプランデータ連携システムへの加入等が要件です（処遇改善加算の算定は不要）。',cat:'kaigo'},
+  {q:'Q10. ②③の上乗せは必ず取らないとダメ？',a:'いいえ。①だけでも申請できます。ただし②はケアプラン連携加入（無料）で要件を満たせるため、取得を強く推奨します。',cat:'kaigo'},
+  {q:'Q11. 計画相談支援は対象ですか？',a:'いいえ。計画相談支援、障害児相談支援、地域相談支援（移行・定着）は対象外です。',cat:'shogai'},
+  {q:'Q12. 令和7年4月以降に開設した事業所は？',a:'対象外です。基準月の時点でサービス提供実績があることが前提です。',cat:'shogai'},
+  {q:'Q13. 障害福祉の補助金を職場環境改善に使える？',a:'いいえ。障害福祉分野は全額を賃金改善に充てる必要があります。介護分野と異なり、職場環境改善経費への充当は認められていません。',cat:'shogai'},
+  {q:'Q14. 法人内の複数事業所間で補助金額を融通できますか？',a:'いいえ。補助金は事業所ごとに算出され、実績報告も事業所別個表で提出します。実施要綱では「同一法人内の一部の事業所のみに賃金改善を集中させること」を「著しく偏った配分」の例として明示しており、禁止されています。各事業所に交付された補助額の範囲内で配分してください。（出典：Vol.1454 実施要綱 7(1)①）',cat:'common'},
+];
+
+function buildFaq(){
+  const hasK=G.kSel.length>0;const hasS=G.sSel.length>0;
   let h='';
-  faqs.forEach((f,i)=>{
-    h+=`<div class="faq-item"><div class="faq-q" onclick="toggleFaq(${i})"><span>Q. ${f.q}</span><span id="fqa${i}">＋</span></div><div class="faq-a" id="fqb${i}">A. ${f.a}</div></div>`;
+  FAQS.forEach((f,i)=>{
+    if(f.cat==='kaigo'&&!hasK)return;
+    if(f.cat==='shogai'&&!hasS)return;
+    h+=`<div class="faq-item"><div class="faq-q" onclick="toggleFaq(${i})">${f.q}<span id="faqArr${i}">＋</span></div><div class="faq-a" id="faqA${i}">${f.a}</div></div>`;
   });
-  document.getElementById('faqList').innerHTML=h;
+  document.getElementById('faqArea').innerHTML=h;
 }
+
 function toggleFaq(i){
-  const b=document.getElementById('fqb'+i);
-  const a=document.getElementById('fqa'+i);
-  b.classList.toggle('open');
-  a.textContent=b.classList.contains('open')?'－':'＋';
+  const a=document.getElementById('faqA'+i);
+  const b=document.getElementById('faqArr'+i);
+  a.classList.toggle('open');
+  b.textContent=a.classList.contains('open')?'－':'＋';
 }
 
 // ===== TEMPLATES =====
@@ -1002,40 +995,77 @@ function showTpl(){
   };
   document.getElementById('tplArea').innerHTML=`<div class="tpl-box"><button class="copy-btn" onclick="copyTpl()">コピー</button>${tpls[type]}</div>`;
 }
+
 function copyTpl(){
-  const box=document.querySelector('.tpl-box');
-  if(!box) return;
-  const t=box.innerText.replace('コピー','').trim();
-  const done=()=>{
-    const b=document.querySelector('.copy-btn');
-    if(!b) return;
-    b.textContent='✓ コピー済';
-    setTimeout(()=>b.textContent='コピー',2000);
-  };
-  const fallback=()=>{
+  const t=document.querySelector('.tpl-box').innerText.replace('コピー','').trim();
+  try{
     const ta=document.createElement('textarea');
-    ta.value=t;
-    ta.setAttribute('readonly','');
-    ta.style.position='fixed';
-    ta.style.left='-9999px';
-    document.body.appendChild(ta);
-    ta.select();
-    try{document.execCommand('copy');done();}
-    catch(e){window.prompt('コピーできなかったため、以下を手動コピーしてください',t);}
-    document.body.removeChild(ta);
-  };
-  if(navigator.clipboard&&window.isSecureContext){
-    navigator.clipboard.writeText(t).then(done).catch(fallback);
-  } else {
-    fallback();
+    ta.value=t;ta.style.cssText='position:fixed;left:-9999px;top:-9999px';
+    document.body.appendChild(ta);ta.select();
+    document.execCommand('copy');document.body.removeChild(ta);
+    const b=document.querySelector('.copy-btn');b.textContent='✓ コピー済';setTimeout(()=>b.textContent='コピー',2000);
+  }catch(e){
+    if(navigator.clipboard){navigator.clipboard.writeText(t).then(()=>{
+      const b=document.querySelector('.copy-btn');b.textContent='✓ コピー済';setTimeout(()=>b.textContent='コピー',2000);
+    }).catch(()=>alert('テキストを手動で選択してコピーしてください。'));}
   }
+}
+
+// ===== PRINT =====
+function printSection(type){
+  const now=new Date();
+  const ds=`${now.getFullYear()}/${String(now.getMonth()+1).padStart(2,'0')}/${String(now.getDate()).padStart(2,'0')}`;
+  let content='';
+
+  if(type==='result'){
+    content=`<div class="print-hdr" style="display:block"><h1>処遇改善 賃上げ補助金 シミュレーション結果</h1><p>作成日：${ds} ｜ TRINITY PARTNERS</p></div>`;
+    content+=document.getElementById('resultArea').innerHTML;
+    // Add distribution results
+    Object.keys(G.results).sort().forEach(l=>{
+      const dr=document.getElementById('distResult_'+l);
+      if(dr&&dr.innerHTML){
+        content+=`<div style="margin-top:12px"><strong>🏢 ${G.results[l].name} ─ 配分設計</strong>${dr.innerHTML}</div>`;
+      }
+    });
+    content+=`<div style="font-size:9px;color:#666;margin-top:12px;line-height:1.5;border-top:1px solid #ccc;padding-top:8px">
+      ※ 本レポートはシミュレーション（概算）であり、正式な交付額を保証するものではありません。<br>
+      ※ 正式な交付率は厚労省実施要綱（Vol.1454 別紙1）をご確認ください。<br>
+      ※ 法定福利費15%は概算です。正確な率は社労士にご確認ください。</div>`;
+  }else if(type==='todo'){
+    const pat=document.querySelector('input[name=todoPat]:checked')?.value||'A';
+    content=`<div class="print-hdr" style="display:block"><h1>処遇改善 賃上げ補助金 やることリスト</h1><p>パターン：${pat} ｜ 作成日：${ds}</p></div>`;
+    content+=document.getElementById('todoArea').innerHTML;
+  }else if(type==='faq'){
+    content=`<div class="print-hdr" style="display:block"><h1>処遇改善 賃上げ補助金 FAQ・参考資料</h1><p>作成日：${ds} ｜ TRINITY PARTNERS</p></div>`;
+    // Expand all FAQ for printing
+    let faqH='';
+    FAQS.forEach(f=>{
+      if(f.cat==='kaigo'&&G.kSel.length===0)return;
+      if(f.cat==='shogai'&&G.sSel.length===0)return;
+      faqH+=`<div style="margin-bottom:8px"><strong>${f.q}</strong><br><span style="color:#555">${f.a}</span></div>`;
+    });
+    content+=`<div style="margin-bottom:16px">${faqH}</div>`;
+    content+=document.querySelector('.cmp').outerHTML;
+    const tplBox=document.querySelector('.tpl-box');
+    if(tplBox) content+=`<div style="margin-top:16px"><strong>■ 職員説明テンプレート</strong>${tplBox.outerHTML}</div>`;
+  }
+
+  const target=document.getElementById('print'+type.charAt(0).toUpperCase()+type.slice(1));
+  if(!target)return;
+  target.innerHTML=content;
+  target.classList.add('print-target');
+  window.print();
+  setTimeout(()=>{target.classList.remove('print-target');},500);
 }
 
 // ===== NAV =====
 function goStep(n){
-  if(n===1){showReqCards();buildKaigoRev();buildShogaiRev()}
-  if(n===2) showReqCards();
+  if(n===1) buildRevInputs();
+  if(n===2) buildReqCards();
+  if(n===3) calculate();
+  if(n===4) buildDistribution();
   if(n===5) buildTodo();
+  if(n===6){buildFaq();showTpl();}
   document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
   document.getElementById('sec'+n).classList.add('active');
   document.querySelectorAll('.step-tab').forEach((t,i)=>{
@@ -1056,4 +1086,3 @@ init();
 </script>
 </body>
 </html>
-
