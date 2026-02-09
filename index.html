@@ -19,14 +19,14 @@
   --radius:10px;--shadow:0 1px 3px rgba(0,0,0,.06);
   --shadow2:0 4px 12px rgba(0,0,0,.08);
 }
-body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;font-size:14px}
+body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;font-size:14px;-webkit-text-size-adjust:100%}
 .wrap{max-width:880px;margin:0 auto;padding:12px}
 .hdr{text-align:center;padding:28px 16px 20px;background:linear-gradient(135deg,#0A6B5E 0%,#2563EB 100%);color:#fff;border-radius:0 0 16px 16px;margin-bottom:20px}
 .hdr h1{font-size:20px;font-weight:700;letter-spacing:.3px}
 .hdr .sub{font-size:11px;opacity:.75;margin-top:4px}
 .hdr .badge{display:inline-block;background:rgba(255,255,255,.18);padding:3px 12px;border-radius:20px;font-size:10px;margin-top:8px;letter-spacing:.3px}
-.steps-bar{display:flex;gap:2px;margin-bottom:20px;background:var(--card);padding:6px;border-radius:10px;border:1px solid var(--border);overflow-x:auto}
-.step-tab{flex:1;text-align:center;padding:8px 4px;border-radius:7px;font-size:11px;font-weight:500;color:var(--text3);cursor:pointer;transition:.2s;white-space:nowrap;border:none;background:none;font-family:inherit}
+.steps-bar{display:flex;gap:2px;margin-bottom:20px;background:var(--card);padding:6px;border-radius:10px;border:1px solid var(--border);overflow-x:auto;-webkit-overflow-scrolling:touch}
+.step-tab{flex:1;text-align:center;padding:8px 4px;border-radius:7px;font-size:11px;font-weight:500;color:var(--text3);cursor:pointer;transition:.2s;white-space:nowrap;border:none;background:none;font-family:inherit;min-height:44px;touch-action:manipulation}
 .step-tab.active{background:var(--kaigo);color:#fff}
 .step-tab.done{color:var(--kaigo);font-weight:600}
 .step-tab:hover:not(.active){background:var(--bg)}
@@ -93,7 +93,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 .btn-print:hover{background:var(--kaigo-light)}
 .btn-row{display:flex;gap:8px;margin:12px 0;flex-wrap:wrap}
 .nav-row{display:flex;justify-content:space-between;margin-top:16px;padding-top:12px;border-top:1px solid var(--border)}
-.nav-btn{padding:10px 24px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;border:none;transition:.15s}
+.nav-btn{padding:10px 24px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;border:none;transition:.15s;min-height:44px;touch-action:manipulation}
 .nav-prev{background:var(--bg);color:var(--text2);border:1px solid var(--border2)}
 .nav-next{background:var(--kaigo);color:#fff}
 .nav-btn:hover{transform:translateY(-1px)}
@@ -131,10 +131,15 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 @media(max-width:600px){
   .wrap{padding:6px}
   .hdr h1{font-size:17px}
-  .result-grid{grid-template-columns:1fr 1fr}
+  .card{padding:14px}
+  .result-grid{grid-template-columns:1fr}
   .svc-grid{grid-template-columns:1fr}
   .rev-row{grid-template-columns:1fr 90px}
-  .step-tab{font-size:9px;padding:6px 2px}
+  .steps-bar{gap:6px}
+  .step-tab{flex:0 0 auto;min-width:76px;font-size:10px;padding:7px 4px}
+  .nav-row{flex-direction:column;gap:8px}
+  .nav-btn{width:100%;padding:12px 10px}
+  .fg input[type=number],.fg input[type=text],.fg select,.btn-primary,.btn-secondary,.nav-btn{font-size:16px}
   .grp-row{flex-direction:column;align-items:flex-start;gap:4px}
 }
 </style>
@@ -714,6 +719,8 @@ function calculate(){
   const hasEnv=env==='yes'||hasCP;
   const hasRenkei=renkei==='yes';
   const q3kOk=G.q3k==='yes'||G.q3k==='maybe'; // 介護の処遇改善加算
+  const q3sOk=G.q3s==='yes'||G.q3s==='maybe'; // 障害の処遇改善加算
+  const sEnvOk=gv('s_env')==='yes';
 
   // Build office map
   const allSvcs=[...G.kSel.map(k=>({id:k,type:'k'})),...G.sSel.map(k=>({id:k,type:'s'}))];
@@ -744,16 +751,18 @@ function calculate(){
           sub=meets?rev*s.rate:0;
           rows+=`<tr><td>🏥 ${s.n}</td><td colspan="2" style="text-align:right;font-weight:700">${fmt(sub)}円${!meets?' <span style="color:var(--danger);font-size:10px">※要件未充足</span>':''}</td></tr>`;
         }else{
-          const a1=rev*s.r1;
-          const a2=(s.t===1?(hasCP||hasRenkei):(hasProd||hasCP||hasRenkei))?rev*s.r2:0;
-          const a3=hasEnv?rev*s.r3:0;
+          const a1=q3kOk?rev*s.r1:0;
+          const a2Req=(s.t===1?(hasCP||hasRenkei):(hasProd||hasCP||hasRenkei));
+          const a2=(q3kOk&&a2Req)?rev*s.r2:0;
+          const a3=(q3kOk&&hasEnv)?rev*s.r3:0;
           sub=a1+a2+a3;
           rows+=`<tr><td>🏥 ${s.n}</td><td style="text-align:right;font-size:11px">①${fmt(a1)} +②${fmt(a2)} +③${fmt(a3)}</td><td style="text-align:right;font-weight:700">${fmt(sub)}円</td></tr>`;
         }
       }else{
         const s=S_SVC[svc.id];if(!s)return;
-        sub=rev*s.rate;
-        rows+=`<tr><td>♿ ${s.n}</td><td colspan="2" style="text-align:right;font-weight:700">${fmt(sub)}円</td></tr>`;
+        const sElig=q3sOk&&sEnvOk;
+        sub=sElig?rev*s.rate:0;
+        rows+=`<tr><td>♿ ${s.n}</td><td colspan="2" style="text-align:right;font-weight:700">${fmt(sub)}円${!sElig?' <span style="color:var(--danger);font-size:10px">※要件未充足</span>':''}</td></tr>`;
       }
       officeTotal+=sub;
     });
@@ -777,6 +786,13 @@ function calculate(){
   </div></div>`;
 
   html+=`<div class="notice warn">⚠️ 事業所間での補助金の融通はできません。各事業所に交付された補助額の範囲内で配分してください。（出典：Vol.1454 実施要綱 7(1)①）</div>`;
+  const hasKNonT3=G.kSel.some(k=>K_SVC[k]&&K_SVC[k].t!==3);
+  if(hasKNonT3&&!q3kOk){
+    html+=`<div class="notice danger">⚠️ 介護分野で処遇改善加算が未算定のため、表1/表2サービスは①②③すべて0円になります。</div>`;
+  }
+  if(G.sSel.length>0&&(!q3sOk||!sEnvOk)){
+    html+=`<div class="notice danger">⚠️ 障害福祉分野の要件未充足のため補助額は0円です。${!q3sOk?'「処遇改善加算の算定」':''}${(!q3sOk&&!sEnvOk)?' と ':''}${!sEnvOk?'「職場環境改善の取組」':''}を確認してください。</div>`;
+  }
 
   if(gv('baseMonth')==='est') html+=`<div class="notice danger">⚠️ 直近月の概算値での試算です。基準月（R7年12月）の確定値で再計算してください。</div>`;
 
@@ -1002,12 +1018,15 @@ function copyTpl(){
     const ta=document.createElement('textarea');
     ta.value=t;ta.style.cssText='position:fixed;left:-9999px;top:-9999px';
     document.body.appendChild(ta);ta.select();
-    document.execCommand('copy');document.body.removeChild(ta);
+    const copied=document.execCommand('copy');
+    document.body.removeChild(ta);
+    if(!copied) throw new Error('copy failed');
     const b=document.querySelector('.copy-btn');b.textContent='✓ コピー済';setTimeout(()=>b.textContent='コピー',2000);
   }catch(e){
     if(navigator.clipboard){navigator.clipboard.writeText(t).then(()=>{
       const b=document.querySelector('.copy-btn');b.textContent='✓ コピー済';setTimeout(()=>b.textContent='コピー',2000);
     }).catch(()=>alert('テキストを手動で選択してコピーしてください。'));}
+    else{window.prompt('コピーできなかったため、以下を手動でコピーしてください',t);}
   }
 }
 
